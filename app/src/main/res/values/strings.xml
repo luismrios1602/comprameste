@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Comprameste</string>
+    <string name="app_titulo">COMPRAMESTE</string>
+    <string name="cabecera_producto">Producto</string>
+    <string name="cabecera_valor_unitario">Valor Unitario</string>
+    <string name="cabecera_cantidad">Cantidad</string>
+    <string name="cabecera_total">Total</string>
+    <string name="total_final">Total:</string>
+    <string name="boton_agregar">Agregar</string>
+    <string name="boton_calcular">Calcular</string>
+    <string name="lb_cantidad_item">Cant:</string>
+    <string name="lb_valUni_item">Valor Und:</string>
+    <string name="lb_total_item">Total:</string>
+    <string name="boton_nueva_compra">Nueva Compra</string>
+</resources>

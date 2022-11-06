@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/txtCantProd"
+        android:layout_width="136dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginLeft="52dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/cabecera_cantidad"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/lbCant"
+        app:layout_constraintTop_toBottomOf="@+id/txtNomProd" />
+
+    <TextView
+        android:id="@+id/lblTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/lb_total_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lbValUni" />
+
+    <TextView
+        android:id="@+id/txtTotalProd"
+        android:layout_width="170dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/cabecera_total"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/lblTotal"
+        app:layout_constraintTop_toBottomOf="@+id/txtValorProd" />
+
+    <TextView
+        android:id="@+id/lbValUni"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/lb_valUni_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lbCant" />
+
+    <TextView
+        android:id="@+id/lbCant"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/lb_cantidad_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtNomProd" />
+
+    <TextView
+        android:id="@+id/txtValorProd"
+        android:layout_width="170dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/cabecera_valor_unitario"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/lbValUni"
+        app:layout_constraintTop_toBottomOf="@+id/txtCantProd" />
+
+    <TextView
+        android:id="@+id/txtNomProd"
+        android:layout_width="238dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/cabecera_producto"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.093"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
