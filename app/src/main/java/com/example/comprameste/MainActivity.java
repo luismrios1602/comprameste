@@ -137,13 +137,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Deslizar item para borrarlo
-        SwipeListViewTouchListener touchListener =new SwipeListViewTouchListener(lvProductos,new SwipeListViewTouchListener.OnSwipeCallback() {
+        /*SwipeListViewTouchListener touchListener =new SwipeListViewTouchListener(lvProductos,new SwipeListViewTouchListener.OnSwipeCallback() {
             @Override
             public void onSwipeLeft(ListView listView, int [] reverseSortedPositions) {
-                /*//Aqui ponemos lo que hara el programa cuando deslizamos un item ha la izquierda
-                eliminarProducto(reverseSortedPositions[0], listView);
+                //Aqui ponemos lo que hara el programa cuando deslizamos un item ha la izquierda
+                eliminarProducto(reverseSortedPositions[0], listView.getChildAt(reverseSortedPositions[0]));
                 adapter.notifyDataSetChanged();
-                calcularTotalFinal();*/
+                calcularTotalFinal();
             }
 
             @Override
@@ -158,7 +158,12 @@ public class MainActivity extends AppCompatActivity {
 
         //Escuchadores del listView
         lvProductos.setOnTouchListener(touchListener);
-        lvProductos.setOnScrollListener(touchListener.makeScrollListener());
+        lvProductos.setOnScrollListener(touchListener.makeScrollListener());*/
+
+    }
+
+    @Override
+    public void onBackPressed() {
 
     }
 

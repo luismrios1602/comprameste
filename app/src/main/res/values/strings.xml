@@ -3,7 +3,7 @@
     <string name="app_titulo">COMPRAMESTE</string>
     <string name="cabecera_producto">Producto</string>
     <string name="cabecera_valor_unitario">Valor Unitario</string>
-    <string name="cabecera_cantidad">Cantidad</string>
+    <string name="cabecera_cantidad">Cant</string>
     <string name="cabecera_total">Total</string>
     <string name="total_final">Total:</string>
     <string name="boton_agregar">Agregar</string>
