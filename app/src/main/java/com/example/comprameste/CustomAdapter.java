@@ -60,12 +60,15 @@ public class CustomAdapter extends BaseAdapter {
             txtValorUni = convertView.findViewById(R.id.txtValorProd);
             txtTotal = convertView.findViewById(R.id.txtTotalProd);
 
+            lbCantidad = convertView.findViewById(R.id.lbCant);
+            lbValorUnitario = convertView.findViewById(R.id.lbValUni);
+            lbTotal = convertView.findViewById(R.id.lblTotal);
+
+            //Si los datos de cantidad y valor unitario vienen en 0 es porque se eliminó el producto
             if (prod.getCantidad() == 0 && prod.getValorUnitario() == 0){
 
-                lbCantidad = convertView.findViewById(R.id.lbCant);
-                lbValorUnitario = convertView.findViewById(R.id.lbValUni);
-                lbTotal = convertView.findViewById(R.id.lblTotal);
-
+                //Colocamos las letras en blanco pues el fondo será rojo
+                convertView.setBackgroundColor(Color.RED);
                 lbCantidad.setTextColor(Color.WHITE);
                 lbValorUnitario.setTextColor(Color.WHITE);
                 lbTotal.setTextColor(Color.WHITE);
@@ -73,6 +76,18 @@ public class CustomAdapter extends BaseAdapter {
                 txtCantidad.setTextColor(Color.WHITE);
                 txtValorUni.setTextColor(Color.WHITE);
                 txtTotal.setTextColor(Color.WHITE);
+            } else {
+
+                //Si trae estos datos colocamos las letras en negro por si estábamos reactivando una eliminada
+                convertView.setBackgroundColor(Color.WHITE);
+                lbCantidad.setTextColor(Color.BLACK);
+                lbValorUnitario.setTextColor(Color.BLACK);
+                lbTotal.setTextColor(Color.BLACK);
+                txtNomProd.setTextColor(Color.BLACK);
+                txtCantidad.setTextColor(Color.BLACK);
+                txtValorUni.setTextColor(Color.BLACK);
+                txtTotal.setTextColor(Color.BLACK);
+
             }
 
         }

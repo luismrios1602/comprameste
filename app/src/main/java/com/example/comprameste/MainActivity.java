@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                             else {
                                 int index = buscarProductoById(lbId);
                                 if (index != -1) editarProducto(index);
-                                    else Toast.makeText(getApplicationContext(),"No se encuentra producto con id "+lbId,Toast.LENGTH_SHORT);
+                                    else Toast.makeText(getApplicationContext(),"No se encuentra producto con id "+lbId,Toast.LENGTH_SHORT).show();
                         }
 
                         limpiarCampos();
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getApplicationContext(),"Producto "+ listaProductos.get(position).getId() + " Eliminado" , Toast.LENGTH_LONG).show();
-                eliminarProducto(position, view);
+                eliminarProducto(position);
                 adapter.notifyDataSetChanged();
                 calcularTotalFinal();
                 return true;
@@ -223,13 +223,6 @@ public class MainActivity extends AppCompatActivity {
         return total;
     }
 
-    public void eliminarProducto(int position, View view){
-        view.setBackgroundColor(Color.RED);
-        listaProductos.get(position).setCantidad(0);
-        listaProductos.get(position).setValorUnitario(0);
-        listaProductos.get(position).setTotal(0);
-    }
-
     public int buscarProductoById(int id){
         for (int i = 0; i < listaProductos.size(); i++){
             if (listaProductos.get(i).getId() == id) return i;
@@ -239,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void agregarProducto(){
+
         listId.add(listId.size()+1);
         Producto newProd = new Producto(listId.get(listId.size()-1),
                 txtProducto.getText().toString(),
@@ -257,6 +251,13 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),"Producto "+listaProductos.get(i).getId()+" editado correctamente.", Toast.LENGTH_SHORT);
 
     }
+
+    public void eliminarProducto(int position){
+        listaProductos.get(position).setCantidad(0);
+        listaProductos.get(position).setValorUnitario(0);
+        listaProductos.get(position).setTotal(0);
+    }
+
 
 
 }
