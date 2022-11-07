@@ -1,12 +1,14 @@
 package com.example.comprameste;
 
 public class Producto {
+    public int id;
     public String nombre;
     public int cantidad;
     public double valorUnitario;
     public double total;
 
-    public Producto(String nombre, int cantidad, double valorUnitario, double total) {
+    public Producto(int id, String nombre, int cantidad, double valorUnitario, double total) {
+        this.id = id;
         this.nombre = nombre;
         this.cantidad = cantidad;
         this.valorUnitario = valorUnitario;
@@ -43,5 +45,13 @@ public class Producto {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

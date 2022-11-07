@@ -2,11 +2,12 @@ package com.example.comprameste;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -15,7 +16,6 @@ import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,9 +26,11 @@ public class MainActivity extends AppCompatActivity {
 
     DecimalFormat formatea = new DecimalFormat("###,###.##");
 
-    ArrayList<Producto> productos = new ArrayList<>();
+    ArrayList<Producto> listaProductos = new ArrayList<>();
+    ArrayList<Integer> listId = new ArrayList<>();
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
         btnNuevaCompra = (Button) findViewById(R.id.btnNuevaCompra);
         lvProductos = (ListView) findViewById(R.id.lvProductos);
 
-        CustomAdapter adapter = new CustomAdapter(getApplicationContext(),productos);
-        //ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item,product);
+        CustomAdapter adapter = new CustomAdapter(this, listaProductos);
         lvProductos.setAdapter(adapter);
 
         btnAgregar.setOnClickListener(new View.OnClickListener() {
@@ -56,14 +57,16 @@ public class MainActivity extends AppCompatActivity {
 
                 if(validar()){
                     if (!txtTotal.getText().toString().isEmpty()){
-                        Producto newProd = new Producto(txtProducto.getText().toString(),
+                        listId.add(listId.size()+1);
+                        Producto newProd = new Producto(listId.get(listId.size()-1),
+                                txtProducto.getText().toString(),
                                 Integer.parseInt(txtCantidad.getText().toString()),
                                 Double.parseDouble(txtValorUni.getText().toString()),
                                 Double.parseDouble(txtTotal.getText().toString()));
-                        productos.add(newProd);
+                        listaProductos.add(newProd);
 
                         limpiarCampos();
-                        txtTotalFinal.setText("$"+formatea.format(calcularTotalFinal()));
+                        calcularTotalFinal();
 
                     } else {
                         Toast.makeText(getApplicationContext(),"Primero de calcular el total" , Toast.LENGTH_SHORT).show();
@@ -95,13 +98,25 @@ public class MainActivity extends AppCompatActivity {
                 txtCantidad.setText("");
                 txtValorUni.setText("");
                 txtTotal.setText("");
-                productos.clear();
+                listaProductos.clear();
                 txtTotalFinal.setText("");
                 adapter.notifyDataSetChanged();
 
             }
         });
 
+        lvProductos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(),"Producto "+ listaProductos.get(position).getId() + " Eliminado" , Toast.LENGTH_LONG).show();
+                eliminarProducto(position, view);
+                adapter.notifyDataSetChanged();
+                calcularTotalFinal();
+                return true;
+            }
+        });
+
+        //Métodos para realizar scroll del listview dentro del scroll original
         miScrollView.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
@@ -120,6 +135,30 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        //Deslizar item para borrarlo
+        SwipeListViewTouchListener touchListener =new SwipeListViewTouchListener(lvProductos,new SwipeListViewTouchListener.OnSwipeCallback() {
+            @Override
+            public void onSwipeLeft(ListView listView, int [] reverseSortedPositions) {
+                /*//Aqui ponemos lo que hara el programa cuando deslizamos un item ha la izquierda
+                eliminarProducto(reverseSortedPositions[0], listView);
+                adapter.notifyDataSetChanged();
+                calcularTotalFinal();*/
+            }
+
+            @Override
+            public void onSwipeRight(ListView listView, int [] reverseSortedPositions) {
+                //Aqui ponemos lo que hara el programa cuando deslizamos un item ha la derecha
+                eliminarProducto(reverseSortedPositions[0], listView.getChildAt(reverseSortedPositions[0]));
+               adapter.notifyDataSetChanged();
+               calcularTotalFinal();
+
+            }
+        },true, false);
+
+        //Escuchadores del listView
+        lvProductos.setOnTouchListener(touchListener);
+        lvProductos.setOnScrollListener(touchListener.makeScrollListener());
 
     }
 
@@ -151,13 +190,22 @@ public class MainActivity extends AppCompatActivity {
         txtTotal.setText("");
     }
 
-    public Double calcularTotalFinal(){
-        Double total = 0.0;
-        for (int i=0; i<productos.size(); i++){
-            total += productos.get(i).getTotal();
+    public double calcularTotalFinal(){
+        double total = 0.0;
+        for (int i = 0; i< listaProductos.size(); i++){
+            total += listaProductos.get(i).getTotal();
         }
 
+        txtTotalFinal.setText("$"+formatea.format(total));
+
         return total;
+    }
+
+    public void eliminarProducto(int position, View view){
+        view.setBackgroundColor(Color.RED);
+        listaProductos.get(position).setCantidad(0);
+        listaProductos.get(position).setValorUnitario(0);
+        listaProductos.get(position).setTotal(0);
     }
 
 

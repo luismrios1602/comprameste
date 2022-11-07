@@ -12,4 +12,5 @@
     <string name="lb_valUni_item">Valor Und:</string>
     <string name="lb_total_item">Total:</string>
     <string name="boton_nueva_compra">Nueva Compra</string>
+    <string name="boton_eliminar">Eliminar</string>
 </resources>
