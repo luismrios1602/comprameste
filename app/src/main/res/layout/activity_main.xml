@@ -20,7 +20,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
@@ -54,18 +54,14 @@
                     android:text="@string/total_final"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-                <EditText
+                <TextView
                     android:id="@+id/txtTotalFinal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:autofillHints="yes"
-                    android:ems="10"
-                    android:enabled="false"
-                    android:inputType="numberDecimal"
-                    android:textColor="#000"
-                    android:textSize="24sp"
+                    android:padding="15dp"
+                    android:text="@string/total_final_inicial"
                     android:textStyle="bold"
-                    tools:ignore="LabelFor" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             </LinearLayout>
 
@@ -137,7 +133,7 @@
                     android:inputType="numberDecimal"
                     tools:ignore="LabelFor" />
 
-                <EditText
+               <!-- <EditText
                     android:id="@+id/txtTotal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -145,7 +141,17 @@
                     android:ems="10"
                     android:enabled="false"
                     android:inputType="numberDecimal"
-                    tools:ignore="LabelFor" />
+                    tools:ignore="LabelFor" /> -->
+
+                <TextView
+                    android:id="@+id/txtTotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_final_inicial"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:enabled="false" />
+
 
             </LinearLayout>
 

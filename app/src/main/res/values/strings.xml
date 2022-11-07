@@ -6,6 +6,7 @@
     <string name="cabecera_cantidad">Cant</string>
     <string name="cabecera_total">Total</string>
     <string name="total_final">Total:</string>
+    <string name="total_final_inicial">$0</string>
     <string name="boton_agregar">Agregar</string>
     <string name="boton_calcular">Calcular</string>
     <string name="lb_cantidad_item">Cant:</string>

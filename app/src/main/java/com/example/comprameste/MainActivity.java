@@ -24,7 +24,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     ScrollView miScrollView;
-    EditText txtProducto,txtCantidad, txtValorUni, txtTotal, txtTotalFinal;
+    EditText txtProducto,txtCantidad, txtValorUni;
+    TextView txtTotalFinal, txtTotal;
     int lbId = 0;
     Button btnAgregar,btnCalcular, btnNuevaCompra;
     ListView lvProductos;
@@ -46,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
         txtProducto = (EditText) findViewById(R.id.txtProducto);
         txtCantidad = (EditText) findViewById(R.id.txtCantidad);
         txtValorUni = (EditText) findViewById(R.id.txtValorUnitario);
-        txtTotal = (EditText) findViewById(R.id.txtTotal);
-        txtTotalFinal = (EditText) findViewById(R.id.txtTotalFinal);
+        txtTotal = (TextView) findViewById(R.id.txtTotal);
+        txtTotalFinal = (TextView) findViewById(R.id.txtTotalFinal);
         btnAgregar = (Button) findViewById(R.id.btnAgregar);
         btnCalcular = (Button) findViewById(R.id.btnCalcular);
         btnNuevaCompra = (Button) findViewById(R.id.btnNuevaCompra);
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(validar()){
-                    if (!txtTotal.getText().toString().isEmpty()){
+                    if (!txtTotal.getText().toString().equals("$0")){
                         if (lbId==0) agregarProducto();
                             else {
                                 int index = buscarProductoById(lbId);
@@ -101,9 +102,9 @@ public class MainActivity extends AppCompatActivity {
                 txtProducto.setText("");
                 txtCantidad.setText("");
                 txtValorUni.setText("");
-                txtTotal.setText("");
+                txtTotal.setText("$0");
                 listaProductos.clear();
-                txtTotalFinal.setText("");
+                txtTotalFinal.setText("$0");
                 adapter.notifyDataSetChanged();
 
             }
@@ -208,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         txtProducto.setText("");
         txtCantidad.setText("");
         txtValorUni.setText("");
-        txtTotal.setText("");
+        txtTotal.setText("$0");
     }
 
     public double calcularTotalFinal(){
