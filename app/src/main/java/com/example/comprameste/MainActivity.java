@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     ScrollView miScrollView;
     EditText txtProducto,txtCantidad, txtValorUni, txtTotal, txtTotalFinal;
+    int lbId = 0;
     Button btnAgregar,btnCalcular, btnNuevaCompra;
     ListView lvProductos;
 
@@ -60,13 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
                 if(validar()){
                     if (!txtTotal.getText().toString().isEmpty()){
-                        listId.add(listId.size()+1);
-                        Producto newProd = new Producto(listId.get(listId.size()-1),
-                                txtProducto.getText().toString(),
-                                Integer.parseInt(txtCantidad.getText().toString()),
-                                Double.parseDouble(txtValorUni.getText().toString()),
-                                Double.parseDouble(txtTotal.getText().toString()));
-                        listaProductos.add(newProd);
+                        if (lbId==0) agregarProducto();
+                            else {
+                                int index = buscarProductoById(lbId);
+                                if (index != -1) editarProducto(index);
+                                    else Toast.makeText(getApplicationContext(),"No se encuentra producto con id "+lbId,Toast.LENGTH_SHORT);
+                        }
 
                         limpiarCampos();
                         calcularTotalFinal();
@@ -116,6 +117,18 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 calcularTotalFinal();
                 return true;
+            }
+        });
+
+        lvProductos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                lbId = listaProductos.get(position).getId();
+                txtProducto.setText(listaProductos.get(position).getNombre());
+                txtCantidad.setText(String.valueOf(listaProductos.get(position).getCantidad()));
+                txtValorUni.setText(String.valueOf(listaProductos.get(position).getValorUnitario()));
+                //txtTotal.setText(String.valueOf(listaProductos.get(position).getTotal()));
+                txtProducto.requestFocusFromTouch();
             }
         });
 
@@ -214,6 +227,34 @@ public class MainActivity extends AppCompatActivity {
         listaProductos.get(position).setCantidad(0);
         listaProductos.get(position).setValorUnitario(0);
         listaProductos.get(position).setTotal(0);
+    }
+
+    public int buscarProductoById(int id){
+        for (int i = 0; i < listaProductos.size(); i++){
+            if (listaProductos.get(i).getId() == id) return i;
+        }
+
+        return -1;
+    }
+
+    public void agregarProducto(){
+        listId.add(listId.size()+1);
+        Producto newProd = new Producto(listId.get(listId.size()-1),
+                txtProducto.getText().toString(),
+                Integer.parseInt(txtCantidad.getText().toString()),
+                Double.parseDouble(txtValorUni.getText().toString()),
+                Double.parseDouble(txtTotal.getText().toString()));
+        listaProductos.add(newProd);
+    }
+
+    public void editarProducto(int i){
+        lbId = 0;
+        listaProductos.get(i).setNombre(txtProducto.getText().toString());
+        listaProductos.get(i).setCantidad(Integer.parseInt(txtCantidad.getText().toString()));
+        listaProductos.get(i).setValorUnitario(Double.parseDouble(txtValorUni.getText().toString()));
+        listaProductos.get(i).setTotal(Double.parseDouble(txtTotal.getText().toString()));
+        Toast.makeText(getApplicationContext(),"Producto "+listaProductos.get(i).getId()+" editado correctamente.", Toast.LENGTH_SHORT);
+
     }
 
 
