@@ -6,6 +6,14 @@ public class Producto {
     public int cantidad;
     public double valorUnitario;
     public double total;
+    public int idCompra;
+
+    public Producto(String nombre, int cantidad, double valorUnitario, double total) {
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.valorUnitario = valorUnitario;
+        this.total = total;
+    }
 
     public Producto(int id, String nombre, int cantidad, double valorUnitario, double total) {
         this.id = id;
@@ -13,6 +21,23 @@ public class Producto {
         this.cantidad = cantidad;
         this.valorUnitario = valorUnitario;
         this.total = total;
+    }
+
+    public Producto(int id, String nombre, int cantidad, double valorUnitario, double total, int idCompra) {
+        this.id = id;
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.valorUnitario = valorUnitario;
+        this.total = total;
+        this.idCompra = idCompra;
+    }
+
+    public Producto(String nombre, int cantidad, double valorUnitario, double total, int idCompra) {
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.valorUnitario = valorUnitario;
+        this.total = total;
+        this.idCompra = idCompra;
     }
 
     public String getNombre() {
@@ -53,5 +78,13 @@ public class Producto {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getIdCompra() {
+        return idCompra;
+    }
+
+    public void setIdCompra(int idCompra) {
+        this.idCompra = idCompra;
     }
 }

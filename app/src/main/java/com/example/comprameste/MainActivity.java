@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -18,22 +22,28 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.SQLData;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
     ScrollView miScrollView;
     EditText txtProducto,txtCantidad, txtValorUni;
     TextView txtTotalFinal, txtTotal;
-    int lbId = 0;
     Button btnAgregar,btnCalcular, btnNuevaCompra;
     ListView lvProductos;
+
+    int lbId = 0;
+    int idCompra = 0;
 
     DecimalFormat formatea = new DecimalFormat("###,###.##");
 
     ArrayList<Producto> listaProductos = new ArrayList<>();
     ArrayList<Integer> listId = new ArrayList<>();
+    CustomAdapter adapter;
+    BDTransations conexion = new BDTransations();
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -54,8 +64,10 @@ public class MainActivity extends AppCompatActivity {
         btnNuevaCompra = (Button) findViewById(R.id.btnNuevaCompra);
         lvProductos = (ListView) findViewById(R.id.lvProductos);
 
-        CustomAdapter adapter = new CustomAdapter(this, listaProductos);
+        adapter= new CustomAdapter(getApplicationContext(), listaProductos);
         lvProductos.setAdapter(adapter);
+
+        cargarUltimaCompra(getApplicationContext());
 
         btnAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,11 +75,54 @@ public class MainActivity extends AppCompatActivity {
 
                 if(validar()){
                     if (!txtTotal.getText().toString().equals("$0")){
-                        if (lbId==0) agregarProducto();
-                            else {
-                                int index = buscarProductoById(lbId);
-                                if (index != -1) editarProducto(index);
-                                    else Toast.makeText(getApplicationContext(),"No se encuentra producto con id "+lbId,Toast.LENGTH_SHORT).show();
+                        if (lbId==0) {
+                            Producto newProd = new Producto(txtProducto.getText().toString(),
+                                                            Integer.parseInt(txtCantidad.getText().toString()),
+                                                            Double.parseDouble(txtValorUni.getText().toString()),
+                                                            Double.parseDouble(txtTotal.getText().toString()),
+                                                            idCompra);
+
+                            Producto prodCreado = conexion.agregarProducto(getApplicationContext(),newProd);
+
+                            if (prodCreado != null){
+
+                                idCompra = prodCreado.getIdCompra();
+                                listaProductos = conexion.buscarProductosByCompra(getApplicationContext(),prodCreado.getIdCompra());
+                                adapter= new CustomAdapter(getApplicationContext(), listaProductos);
+                                lvProductos.setAdapter(adapter);
+                                lbId = 0;
+                                Toast.makeText(getApplicationContext(), "Producto creado exitosamente.", Toast.LENGTH_LONG).show();
+
+
+                            } else {
+                                Toast.makeText(getApplicationContext(), "ERROR: No se pudo crear el Producto.", Toast.LENGTH_LONG).show();
+                            }
+
+                        } else {
+                                Producto prodEdit = conexion.buscarProductoById(getApplicationContext(), lbId);
+                                if (prodEdit != null) {
+
+                                    prodEdit.setNombre(txtProducto.getText().toString());
+                                    prodEdit.setCantidad(Integer.parseInt(txtCantidad.getText().toString()));
+                                    prodEdit.setValorUnitario(Double.parseDouble(txtValorUni.getText().toString()));
+                                    prodEdit.setTotal(Double.parseDouble(txtTotal.getText().toString()));
+
+                                    prodEdit = conexion.editarProducto(getApplicationContext(), prodEdit);
+                                    if (prodEdit != null){
+
+                                        listaProductos = conexion.buscarProductosByCompra(getApplicationContext(),prodEdit.getIdCompra());
+                                        adapter= new CustomAdapter(getApplicationContext(), listaProductos);
+                                        lvProductos.setAdapter(adapter);
+                                        lbId = 0;
+                                        Toast.makeText(getApplicationContext(), "Producto editado exitosamente.",Toast.LENGTH_LONG).show();
+
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "ERROR: No se pudo editar el Producto", Toast.LENGTH_LONG).show();
+                                    }
+
+                                } else {
+                                    Toast.makeText(getApplicationContext(),"No se encuentra producto con id "+prodEdit.getId(),Toast.LENGTH_SHORT).show();
+                                }
                         }
 
                         limpiarCampos();
@@ -103,8 +158,9 @@ public class MainActivity extends AppCompatActivity {
                 txtCantidad.setText("");
                 txtValorUni.setText("");
                 txtTotal.setText("$0");
-                listaProductos.clear();
                 txtTotalFinal.setText("$0");
+                idCompra = 0;
+                listaProductos.clear();
                 adapter.notifyDataSetChanged();
 
             }
@@ -113,9 +169,23 @@ public class MainActivity extends AppCompatActivity {
         lvProductos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(),"Producto "+ listaProductos.get(position).getId() + " Eliminado" , Toast.LENGTH_LONG).show();
-                eliminarProducto(position);
-                adapter.notifyDataSetChanged();
+
+                Producto prodElim = conexion.buscarProductoById(getApplicationContext(), listaProductos.get(position).getId());
+
+                if (prodElim != null) {
+
+                    prodElim = conexion.eliminarProducto(getApplicationContext(), prodElim);
+
+                    if (prodElim != null) {
+                        listaProductos = conexion.buscarProductosByCompra(getApplicationContext(),prodElim.getIdCompra());
+                        adapter= new CustomAdapter(getApplicationContext(), listaProductos);
+                        lvProductos.setAdapter(adapter);
+                        Toast.makeText(getApplicationContext(), "Producto eliminado exitosamente.", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(),"ERROR: No se pudo eliminar el registro",Toast.LENGTH_LONG).show();
+                    }
+                }
+
                 calcularTotalFinal();
                 return true;
             }
@@ -223,40 +293,25 @@ public class MainActivity extends AppCompatActivity {
         return total;
     }
 
-    public int buscarProductoById(int id){
-        for (int i = 0; i < listaProductos.size(); i++){
-            if (listaProductos.get(i).getId() == id) return i;
+    public void cargarUltimaCompra(Context context){
+
+        listaProductos = conexion.buscarProductosUltimaCompra(context);
+        if (listaProductos.size() > 0){
+            idCompra = listaProductos.get(0).getIdCompra();
+            System.out.println("idCompra "+ idCompra);
+        } else {
+            idCompra = 0;
         }
-
-        return -1;
+        adapter= new CustomAdapter(getApplicationContext(), listaProductos);
+        lvProductos.setAdapter(adapter);
+        calcularTotalFinal();
     }
 
-    public void agregarProducto(){
 
-        listId.add(listId.size()+1);
-        Producto newProd = new Producto(listId.get(listId.size()-1),
-                txtProducto.getText().toString(),
-                Integer.parseInt(txtCantidad.getText().toString()),
-                Double.parseDouble(txtValorUni.getText().toString()),
-                Double.parseDouble(txtTotal.getText().toString()));
-        listaProductos.add(newProd);
-    }
 
-    public void editarProducto(int i){
-        lbId = 0;
-        listaProductos.get(i).setNombre(txtProducto.getText().toString());
-        listaProductos.get(i).setCantidad(Integer.parseInt(txtCantidad.getText().toString()));
-        listaProductos.get(i).setValorUnitario(Double.parseDouble(txtValorUni.getText().toString()));
-        listaProductos.get(i).setTotal(Double.parseDouble(txtTotal.getText().toString()));
-        Toast.makeText(getApplicationContext(),"Producto "+listaProductos.get(i).getId()+" editado correctamente.", Toast.LENGTH_SHORT);
 
-    }
 
-    public void eliminarProducto(int position){
-        listaProductos.get(position).setCantidad(0);
-        listaProductos.get(position).setValorUnitario(0);
-        listaProductos.get(position).setTotal(0);
-    }
+
 
 
 
