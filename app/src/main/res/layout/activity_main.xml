@@ -16,7 +16,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,9 +61,32 @@
                     android:layout_height="wrap_content"
                     android:padding="15dp"
                     android:text="@string/total_final_inicial"
-                    android:textStyle="bold"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textStyle="bold" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/lbProducto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="@string/cabecera_producto" />
+
+                <EditText
+                    android:id="@+id/txtProducto"
+                    style="@style/Widget.AppCompat.EditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:autofillHints="true"
+                    android:ems="10"
+                    android:inputType="textCapSentences"
+                    tools:ignore="LabelFor" />
             </LinearLayout>
 
             <LinearLayout
@@ -71,22 +95,15 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/lbProducto"
-                    android:layout_width="140dp"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:text="@string/cabecera_producto" />
-
-                <TextView
                     android:id="@+id/lbCantidad"
-                    android:layout_width="43dp"
+                    android:layout_width="53dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="@string/cabecera_cantidad" />
 
                 <TextView
                     android:id="@+id/lbValorUni"
-                    android:layout_width="wrap_content"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="@string/cabecera_valor_unitario" />
@@ -106,18 +123,8 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/txtProducto"
-                    style="@style/Widget.AppCompat.EditText"
-                    android:layout_width="141dp"
-                    android:layout_height="wrap_content"
-                    android:autofillHints="true"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    tools:ignore="LabelFor" />
-
-                <EditText
                     android:id="@+id/txtCantidad"
-                    android:layout_width="41dp"
+                    android:layout_width="53dp"
                     android:layout_height="wrap_content"
                     android:autofillHints="yes"
                     android:ems="10"
@@ -126,14 +133,14 @@
 
                 <EditText
                     android:id="@+id/txtValorUnitario"
-                    android:layout_width="96dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autofillHints="true"
                     android:ems="10"
                     android:inputType="numberDecimal"
                     tools:ignore="LabelFor" />
 
-               <!-- <EditText
+                <!-- <EditText
                     android:id="@+id/txtTotal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -147,10 +154,10 @@
                     android:id="@+id/txtTotal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:text="@string/total_final_inicial"
-                    android:textStyle="bold"
                     android:textSize="18sp"
-                    android:enabled="false" />
+                    android:textStyle="bold" />
 
 
             </LinearLayout>
@@ -159,7 +166,7 @@
                 android:id="@+id/btnCalcular"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/boton_calcular" />
 
             <Button
@@ -171,9 +178,11 @@
             <ListView
                 android:id="@+id/lvProductos"
                 android:layout_width="match_parent"
-                android:layout_height="333dp"
+                android:layout_height="2000dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
                 android:baselineAligned="false"
                 tools:ignore="ExtraText,NestedScrolling">
