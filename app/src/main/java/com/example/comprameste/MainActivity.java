@@ -1,16 +1,10 @@
 package com.example.comprameste;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,27 +16,26 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.sql.SQLData;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
     ScrollView miScrollView;
     EditText txtProducto,txtCantidad, txtValorUni;
     TextView txtTotalFinal, txtTotal;
-    Button btnAgregar,btnCalcular, btnNuevaCompra;
+    Button btnAgregar,btnCalcular, btnNuevaCompra, btnHistorial;
     ListView lvProductos;
 
     int lbId = 0;
     int idCompra = 0;
+    double totalFinal = 0.0;
 
     DecimalFormat formatea = new DecimalFormat("###,###.##");
 
     ArrayList<Producto> listaProductos = new ArrayList<>();
     ArrayList<Integer> listId = new ArrayList<>();
-    CustomAdapter adapter;
+    CustomAdapterProductos adapter;
     BDTransations conexion = new BDTransations();
 
 
@@ -62,9 +55,10 @@ public class MainActivity extends AppCompatActivity {
         btnAgregar = (Button) findViewById(R.id.btnAgregar);
         btnCalcular = (Button) findViewById(R.id.btnCalcular);
         btnNuevaCompra = (Button) findViewById(R.id.btnNuevaCompra);
+        btnHistorial = (Button) findViewById(R.id.btnHistorial);
         lvProductos = (ListView) findViewById(R.id.lvProductos);
 
-        adapter= new CustomAdapter(getApplicationContext(), listaProductos);
+        adapter= new CustomAdapterProductos(getApplicationContext(), listaProductos);
         lvProductos.setAdapter(adapter);
 
         cargarUltimaCompra(getApplicationContext());
@@ -88,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 idCompra = prodCreado.getIdCompra();
                                 listaProductos = conexion.buscarProductosByCompra(getApplicationContext(),prodCreado.getIdCompra());
-                                adapter= new CustomAdapter(getApplicationContext(), listaProductos);
+                                adapter= new CustomAdapterProductos(getApplicationContext(), listaProductos);
                                 lvProductos.setAdapter(adapter);
                                 lbId = 0;
                                 Toast.makeText(getApplicationContext(), "Producto creado exitosamente.", Toast.LENGTH_LONG).show();
@@ -111,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                                     if (prodEdit != null){
 
                                         listaProductos = conexion.buscarProductosByCompra(getApplicationContext(),prodEdit.getIdCompra());
-                                        adapter= new CustomAdapter(getApplicationContext(), listaProductos);
+                                        adapter= new CustomAdapterProductos(getApplicationContext(), listaProductos);
                                         lvProductos.setAdapter(adapter);
                                         lbId = 0;
                                         Toast.makeText(getApplicationContext(), "Producto editado exitosamente.",Toast.LENGTH_LONG).show();
@@ -127,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
                         limpiarCampos();
                         calcularTotalFinal();
+                        conexion.actualizarCompra(getApplicationContext(),idCompra,listaProductos.size(),totalFinal);
 
                     } else {
                         Toast.makeText(getApplicationContext(),"Primero de calcular el total" , Toast.LENGTH_SHORT).show();
@@ -178,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (prodElim != null) {
                         listaProductos = conexion.buscarProductosByCompra(getApplicationContext(),prodElim.getIdCompra());
-                        adapter= new CustomAdapter(getApplicationContext(), listaProductos);
+                        adapter= new CustomAdapterProductos(getApplicationContext(), listaProductos);
                         lvProductos.setAdapter(adapter);
                         Toast.makeText(getApplicationContext(), "Producto eliminado exitosamente.", Toast.LENGTH_LONG).show();
                     } else {
@@ -187,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 calcularTotalFinal();
+                conexion.actualizarCompra(getApplicationContext(),idCompra,listaProductos.size(),totalFinal);
                 return true;
             }
         });
@@ -247,6 +243,14 @@ public class MainActivity extends AppCompatActivity {
         lvProductos.setOnTouchListener(touchListener);
         lvProductos.setOnScrollListener(touchListener.makeScrollListener());*/
 
+        btnHistorial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -288,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
             total += listaProductos.get(i).getTotal();
         }
 
+        totalFinal = total;
         txtTotalFinal.setText("$"+formatea.format(total));
 
         return total;
@@ -302,10 +307,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             idCompra = 0;
         }
-        adapter= new CustomAdapter(getApplicationContext(), listaProductos);
+        adapter= new CustomAdapterProductos(getApplicationContext(), listaProductos);
         lvProductos.setAdapter(adapter);
         calcularTotalFinal();
     }
+
 
 
 

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/lbIdCompra"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/cabecera_id"
+        android:textColor="#000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/txtIdCompra"
+        android:layout_width="138dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="96dp"
+        android:layout_marginLeft="96dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/cabecera_id"
+        android:textColor="#000"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/lbIdCompra"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/lbFecha"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/cabecera_fecha"
+        android:textColor="#000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lbIdCompra" />
+
+
+    <TextView
+        android:id="@+id/txtFecha"
+        android:layout_width="138dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginLeft="72dp"
+        android:text="@string/cabecera_fecha"
+        android:textColor="#000"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/lbFecha"
+        app:layout_constraintTop_toBottomOf="@+id/txtIdCompra" />
+
+    <TextView
+        android:id="@+id/lbCantProdCompra"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/cabecera_cantidad_prod"
+        android:textColor="#000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lbFecha" />
+
+    <TextView
+        android:id="@+id/txtCantProdCompra"
+        android:layout_width="138dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="@string/cabecera_cantidad_prod"
+        android:textColor="#000"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/lbCantProdCompra"
+        app:layout_constraintTop_toBottomOf="@+id/txtFecha" />
+
+    <TextView
+        android:id="@+id/lbTotalCompra"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/lb_total_item"
+        android:textColor="#000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lbCantProdCompra" />
+
+    <TextView
+        android:id="@+id/txtTotalCompra"
+        android:layout_width="138dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginLeft="76dp"
+        android:text="@string/cabecera_total"
+        android:textColor="#000"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/lbTotalCompra"
+        app:layout_constraintTop_toBottomOf="@+id/txtCantProdCompra" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

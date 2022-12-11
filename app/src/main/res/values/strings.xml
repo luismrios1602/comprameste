@@ -5,6 +5,9 @@
     <string name="cabecera_valor_unitario">Valor Unitario</string>
     <string name="cabecera_cantidad">Cant</string>
     <string name="cabecera_total">Total</string>
+    <string name="cabecera_id">Id</string>
+    <string name="cabecera_fecha">Fecha</string>
+    <string name="cabecera_cantidad_prod">Cantidad Prod.</string>
     <string name="total_final">Total:</string>
     <string name="total_final_inicial">$0</string>
     <string name="boton_agregar">Agregar</string>
@@ -14,4 +17,5 @@
     <string name="lb_total_item">Total:</string>
     <string name="boton_nueva_compra">Nueva Compra</string>
     <string name="boton_eliminar">Eliminar</string>
+    <string name="boton_historial">Historial</string>
 </resources>

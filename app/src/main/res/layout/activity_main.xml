@@ -36,6 +36,12 @@
                 app:fontFamily="sans-serif" />
 
             <Button
+                android:id="@+id/btnHistorial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/boton_historial" />
+
+            <Button
                 android:id="@+id/btnNuevaCompra"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"

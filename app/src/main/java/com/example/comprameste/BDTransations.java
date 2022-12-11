@@ -38,6 +38,8 @@ public class BDTransations {
                 ContentValues compra = new ContentValues();
                 String fecha = new Date().toString();
                 compra.put("fecha",fecha);
+                //compra.put("cant_prod",cantProd);
+                //compra.put("total",totalFinal);
 
                 int idCompra = (int) db.insert("compras",null,compra);
 
@@ -229,4 +231,53 @@ public class BDTransations {
             return 0;
         }
     }
+
+    public ArrayList<Compra> buscarCompras(Context context){
+        System.out.println("Consultando compras");
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(context);
+        SQLiteDatabase db = admin.getWritableDatabase();
+
+        Compra compra = null;
+        ArrayList<Compra> listaCompras = new ArrayList<>();
+
+        try {
+
+            Cursor registro = db.rawQuery("SELECT * FROM Compras", null);
+            if (registro.moveToFirst()){
+                do{
+                    int id = registro.getInt(0);
+                    String fecha = registro.getString(1);
+                    int cant_prod = registro.getInt(2);
+                    double valor_total = registro.getDouble(3);
+
+                    compra = new Compra(id, fecha, cant_prod, valor_total);
+                    listaCompras.add(compra);
+                }while(registro.moveToNext());
+            }
+
+            registro.close();
+            return listaCompras;
+
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return new ArrayList<>();
+        }
+
+    }
+
+    public void actualizarCompra(Context context, int idCompra, int cantProd, double total){
+
+        try {
+            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(context);
+            SQLiteDatabase db = admin.getWritableDatabase();
+
+            db.execSQL("UPDATE Compras SET cant_prod = "+cantProd+", total = "+total+" WHERE id ="+idCompra);
+            db.close();
+        } catch (Exception e){
+            System.out.println(e);
+        }
+
+
+    }
+
 }

@@ -13,14 +13,14 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomAdapter extends BaseAdapter {
+public class CustomAdapterProductos extends BaseAdapter {
 
     Context context;
     ArrayList<Producto> listaProd;
 
     DecimalFormat formatea = new DecimalFormat("###,###.##");
 
-    public CustomAdapter(Context context, ArrayList<Producto> listaProd) {
+    public CustomAdapterProductos(Context context, ArrayList<Producto> listaProd) {
         this.context = context;
         this.listaProd = listaProd;
     }
