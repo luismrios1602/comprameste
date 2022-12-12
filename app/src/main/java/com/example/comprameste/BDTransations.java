@@ -6,10 +6,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class BDTransations {
+
+    SimpleDateFormat formatterFecha = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
 
     public BDTransations() {
     }
@@ -36,8 +39,9 @@ public class BDTransations {
             } else {
 
                 ContentValues compra = new ContentValues();
-                String fecha = new Date().toString();
-                compra.put("fecha",fecha);
+                Date fecha = new Date();
+                String fechaFormat = formatterFecha.format(fecha);
+                compra.put("fecha",fechaFormat);
                 //compra.put("cant_prod",cantProd);
                 //compra.put("total",totalFinal);
 

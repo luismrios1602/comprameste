@@ -24,11 +24,11 @@ public class MainActivity extends AppCompatActivity {
     ScrollView miScrollView;
     EditText txtProducto,txtCantidad, txtValorUni;
     TextView txtTotalFinal, txtTotal;
-    Button btnAgregar,btnCalcular, btnNuevaCompra, btnHistorial;
+    Button btnAgregar,btnCalcular, btnNuevaCompra, btnHistorial, btnDuplicarCompra;
     ListView lvProductos;
 
     int lbId = 0;
-    int idCompra = 0;
+    int idCompraGlobal = 0;
     double totalFinal = 0.0;
 
     DecimalFormat formatea = new DecimalFormat("###,###.##");
@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Integer> listId = new ArrayList<>();
     CustomAdapterProductos adapter;
     BDTransations conexion = new BDTransations();
+
+    Bundle bundle;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -56,12 +58,30 @@ public class MainActivity extends AppCompatActivity {
         btnCalcular = (Button) findViewById(R.id.btnCalcular);
         btnNuevaCompra = (Button) findViewById(R.id.btnNuevaCompra);
         btnHistorial = (Button) findViewById(R.id.btnHistorial);
+        btnDuplicarCompra = (Button) findViewById(R.id.btnDuplicarCompra);
         lvProductos = (ListView) findViewById(R.id.lvProductos);
 
         adapter= new CustomAdapterProductos(getApplicationContext(), listaProductos);
         lvProductos.setAdapter(adapter);
 
-        cargarUltimaCompra(getApplicationContext());
+        //Llamamos el bundle por si venimos desde la actividad Historial
+        bundle = getIntent().getExtras();
+        System.out.println(bundle);
+        //Si no venimos desde allí (O se le da atrás) el bundle viene null
+        if(bundle != null){
+            System.out.println("idCompra seleccionada: "+bundle.getInt("idCompra"));
+            idCompraGlobal = (bundle.getInt("idCompra")!=0)?bundle.getInt("idCompra"):0;
+            btnDuplicarCompra.setEnabled(true);
+
+        } else {
+            btnDuplicarCompra.setEnabled(false);
+        }
+
+        if(idCompraGlobal == 0){
+            cargarUltimaCompra(getApplicationContext());
+        } else {
+            buscarProductosByCompra(getApplicationContext(), idCompraGlobal);
+        }
 
         btnAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,13 +94,13 @@ public class MainActivity extends AppCompatActivity {
                                                             Integer.parseInt(txtCantidad.getText().toString()),
                                                             Double.parseDouble(txtValorUni.getText().toString()),
                                                             Double.parseDouble(txtTotal.getText().toString()),
-                                                            idCompra);
+                                    idCompraGlobal);
 
                             Producto prodCreado = conexion.agregarProducto(getApplicationContext(),newProd);
 
                             if (prodCreado != null){
 
-                                idCompra = prodCreado.getIdCompra();
+                                idCompraGlobal = prodCreado.getIdCompra();
                                 listaProductos = conexion.buscarProductosByCompra(getApplicationContext(),prodCreado.getIdCompra());
                                 adapter= new CustomAdapterProductos(getApplicationContext(), listaProductos);
                                 lvProductos.setAdapter(adapter);
@@ -121,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
                         limpiarCampos();
                         calcularTotalFinal();
-                        conexion.actualizarCompra(getApplicationContext(),idCompra,listaProductos.size(),totalFinal);
+                        conexion.actualizarCompra(getApplicationContext(), idCompraGlobal,listaProductos.size(),totalFinal);
 
                     } else {
                         Toast.makeText(getApplicationContext(),"Primero de calcular el total" , Toast.LENGTH_SHORT).show();
@@ -154,7 +174,8 @@ public class MainActivity extends AppCompatActivity {
                 txtValorUni.setText("");
                 txtTotal.setText("$0");
                 txtTotalFinal.setText("$0");
-                idCompra = 0;
+                btnDuplicarCompra.setEnabled(false);
+                idCompraGlobal = 0;
                 listaProductos.clear();
                 adapter.notifyDataSetChanged();
 
@@ -182,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 calcularTotalFinal();
-                conexion.actualizarCompra(getApplicationContext(),idCompra,listaProductos.size(),totalFinal);
+                conexion.actualizarCompra(getApplicationContext(), idCompraGlobal,listaProductos.size(),totalFinal);
                 return true;
             }
         });
@@ -251,6 +272,45 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnDuplicarCompra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listaProductos.size() > 0){
+                    String nombre;
+                    int cantidad;
+                    double valorUnitario;
+                    double total;
+                    int idCompra = 0;
+
+                    for(int i = 0; i < listaProductos.size(); i ++){
+                        nombre = listaProductos.get(i).getNombre();
+                        cantidad = listaProductos.get(i).getCantidad();
+                        valorUnitario = listaProductos.get(i).getValorUnitario();
+                        total = listaProductos.get(i).getTotal();
+
+                        Producto newProd = new Producto(nombre,cantidad,valorUnitario,total);
+
+                        if(i==0){
+                            newProd = conexion.agregarProducto(getApplicationContext(),newProd);
+                            idCompra = newProd.getIdCompra();
+                        } else {
+                            newProd.setIdCompra(idCompra);
+                            newProd = conexion.agregarProducto(getApplicationContext(),newProd);
+                        }
+                    }
+
+                    idCompraGlobal = idCompra;
+                    buscarProductosByCompra(getApplicationContext(), idCompraGlobal);
+                    conexion.actualizarCompra(getApplicationContext(),idCompraGlobal,listaProductos.size(),totalFinal);
+
+                    Toast.makeText(getApplicationContext(),"Compra duplicada exitosamente." , Toast.LENGTH_LONG).show();
+
+                } else {
+                    Toast.makeText(getApplicationContext(),"Sin productos a duplicar." , Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -302,11 +362,25 @@ public class MainActivity extends AppCompatActivity {
 
         listaProductos = conexion.buscarProductosUltimaCompra(context);
         if (listaProductos.size() > 0){
+            idCompraGlobal = listaProductos.get(0).getIdCompra();
+            System.out.println("idCompra "+ idCompraGlobal);
+        } else {
+            idCompraGlobal = 0;
+        }
+        adapter= new CustomAdapterProductos(getApplicationContext(), listaProductos);
+        lvProductos.setAdapter(adapter);
+        calcularTotalFinal();
+    }
+
+    public void buscarProductosByCompra(Context context, int idCompra){
+        listaProductos = conexion.buscarProductosByCompra(context, idCompra);
+        if (listaProductos.size() > 0){
             idCompra = listaProductos.get(0).getIdCompra();
             System.out.println("idCompra "+ idCompra);
         } else {
             idCompra = 0;
         }
+
         adapter= new CustomAdapterProductos(getApplicationContext(), listaProductos);
         lvProductos.setAdapter(adapter);
         calcularTotalFinal();

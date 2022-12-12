@@ -8,13 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class CustomAdapterCompras extends BaseAdapter {
     Context context;
     ArrayList<Compra> listaCompras;
-
-    DecimalFormat formatea = new DecimalFormat("###,###.##");
+    DecimalFormat formatterDecimal = new DecimalFormat("###,###.##");
 
     public CustomAdapterCompras(Context context, ArrayList<Compra> listaCompras) {
         this.context = context;
@@ -72,7 +72,7 @@ public class CustomAdapterCompras extends BaseAdapter {
         txtIdCompra.setText(String.valueOf(compra.getId()));
         txtFecha.setText(compra.getFecha());
         txtCantProdCompra.setText(String.valueOf(compra.getCantProductos()));
-        txtTotalCompra.setText("$"+formatea.format(compra.getTotal()));
+        txtTotalCompra.setText("$"+ formatterDecimal.format(compra.getTotal()));
 
         return convertView;
     }

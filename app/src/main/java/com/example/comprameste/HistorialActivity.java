@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -28,9 +30,18 @@ public class HistorialActivity extends AppCompatActivity {
 
         buscarCompras(getApplicationContext());
 
+        lvCompras.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                intent.putExtra("idCompra",listaCompras.get(position).getId());
+                startActivity(intent);
+                return true;
+            }
+        });
 
     }
-
+    
     public void buscarCompras(Context context){
 
         listaCompras = conexion.buscarCompras(context);
