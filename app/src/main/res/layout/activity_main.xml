@@ -39,7 +39,9 @@
                 android:id="@+id/btnHistorial"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/boton_historial" />
+                android:text="@string/boton_historial"
+                app:backgroundTint="@color/gray"
+                app:icon="?attr/actionModePasteDrawable" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -51,9 +53,10 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
                     android:text="@string/boton_nueva_compra"
-                    android:layout_marginRight="15dp" />
+                    app:icon="@drawable/ic_action_name" />
 
                 <Button
                     android:id="@+id/btnDuplicarCompra"
@@ -61,7 +64,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/boton_duplicar_compra" />
+                    android:text="@string/boton_duplicar_compra"
+                    android:textSize="12sp"
+                    app:icon="?attr/actionModeCopyDrawable" />
             </LinearLayout>
 
             <LinearLayout
@@ -184,18 +189,30 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btnCalcular"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/boton_calcular" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
 
-            <Button
-                android:id="@+id/btnAgregar"
-                android:layout_width="126dp"
-                android:layout_height="wrap_content"
-                android:text="@string/boton_agregar" />
+                <Button
+                    android:id="@+id/btnCalcular"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/boton_calcular"
+                    android:layout_marginEnd="15dp"
+                    app:icon="@drawable/ic_launcher_calculate"
+                    android:layout_marginRight="15dp" />
+
+                <Button
+                    android:id="@+id/btnAgregar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/boton_agregar"
+                    app:backgroundTint="@color/green_crack"
+                    app:icon="@drawable/ic_launcher_add" />
+            </LinearLayout>
 
             <ListView
                 android:id="@+id/lvProductos"

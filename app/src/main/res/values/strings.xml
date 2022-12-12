@@ -19,4 +19,5 @@
     <string name="boton_eliminar">Eliminar</string>
     <string name="boton_historial">Historial</string>
     <string name="boton_duplicar_compra">Duplicar Compra</string>
+    <string name="cabecera_compras_realizadas">Compras Realizadas</string>
 </resources>
