@@ -8,8 +8,8 @@ import androidx.annotation.Nullable;
 
 public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
-    private static final  String DATABASE_NAME = "DBComprameste";
+    private static final int DATABASE_VERSION = 3;
+    private static final String DATABASE_NAME = "DBComprameste";
 
     //Constructor para crear la base de datos
     public AdminSQLiteOpenHelper(@Nullable Context context) {
@@ -37,6 +37,8 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS Productos");
+        db.execSQL("DROP TABLE IF EXISTS Compras");
+        onCreate(db);
     }
 }
