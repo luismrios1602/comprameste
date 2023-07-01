@@ -9,9 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_shop_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Comprameste">
-        <activity android:name=".HistorialActivity"></activity>
+        <activity android:name="com.luizinho_dev.comprameste.HistorialActivity"></activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.luizinho_dev.comprameste.MainActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true">
             <intent-filter>

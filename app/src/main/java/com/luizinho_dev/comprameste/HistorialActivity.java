@@ -1,4 +1,4 @@
-package com.example.comprameste;
+package com.luizinho_dev.comprameste;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.example.comprameste.R;
 
 import java.util.ArrayList;
 

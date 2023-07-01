@@ -1,10 +1,9 @@
-package com.example.comprameste;
+package com.luizinho_dev.comprameste;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

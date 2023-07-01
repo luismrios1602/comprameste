@@ -1,4 +1,4 @@
-package com.example.comprameste;
+package com.luizinho_dev.comprameste;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
+import com.example.comprameste.R;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 public class CustomAdapterProductos extends BaseAdapter {
 

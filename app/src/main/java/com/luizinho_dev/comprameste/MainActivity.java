@@ -1,4 +1,4 @@
-package com.example.comprameste;
+package com.luizinho_dev.comprameste;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.comprameste.R;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

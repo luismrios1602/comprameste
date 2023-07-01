@@ -1,4 +1,4 @@
-package com.example.comprameste;
+package com.luizinho_dev.comprameste;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,8 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.comprameste.R;
+
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class CustomAdapterCompras extends BaseAdapter {

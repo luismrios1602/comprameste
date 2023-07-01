@@ -1,4 +1,4 @@
-package com.example.comprameste;
+package com.luizinho_dev.comprameste;
 
 import java.util.ArrayList;
 import java.util.Collections;

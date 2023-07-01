@@ -7,9 +7,9 @@ android {
     buildToolsVersion "33.0.0"
 
     defaultConfig {
-        applicationId "com.example.comprameste"
+        applicationId 'com.luizinho_dev.comprameste'
         minSdkVersion 16
-        targetSdkVersion 33
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 

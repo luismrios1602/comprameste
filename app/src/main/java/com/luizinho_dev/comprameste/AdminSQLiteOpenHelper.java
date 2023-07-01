@@ -1,4 +1,4 @@
-package com.example.comprameste;
+package com.luizinho_dev.comprameste;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
