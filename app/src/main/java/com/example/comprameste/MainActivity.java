@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     ScrollView miScrollView;
     EditText txtProducto,txtCantidad, txtValorUni;
     TextView txtTotalFinal, txtTotal;
-    Button btnAgregar,btnCalcular, btnNuevaCompra, btnHistorial, btnDuplicarCompra;
+    Button btnAgregar,btnCalcular, btnCancelar, btnNuevaCompra, btnHistorial, btnDuplicarCompra;
     ListView lvProductos;
 
     int lbId = 0;
@@ -51,11 +53,14 @@ public class MainActivity extends AppCompatActivity {
 
         txtProducto = (EditText) findViewById(R.id.txtProducto);
         txtCantidad = (EditText) findViewById(R.id.txtCantidad);
+        txtCantidad.setText("1");
         txtValorUni = (EditText) findViewById(R.id.txtValorUnitario);
+        txtValorUni.setText("0");
         txtTotal = (TextView) findViewById(R.id.txtTotal);
         txtTotalFinal = (TextView) findViewById(R.id.txtTotalFinal);
         btnAgregar = (Button) findViewById(R.id.btnAgregar);
-        btnCalcular = (Button) findViewById(R.id.btnCalcular);
+//        btnCalcular = (Button) findViewById(R.id.btnCalcular);
+        btnCancelar = (Button) findViewById(R.id.btnCancelar);
         btnNuevaCompra = (Button) findViewById(R.id.btnNuevaCompra);
         btnHistorial = (Button) findViewById(R.id.btnHistorial);
         btnDuplicarCompra = (Button) findViewById(R.id.btnDuplicarCompra);
@@ -88,64 +93,60 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(validar()){
-                    if (!txtTotal.getText().toString().equals("$0")){
-                        if (lbId==0) {
-                            Producto newProd = new Producto(txtProducto.getText().toString(),
-                                                            Integer.parseInt(txtCantidad.getText().toString()),
-                                                            Double.parseDouble(txtValorUni.getText().toString()),
-                                                            Double.parseDouble(txtTotal.getText().toString()),
-                                    idCompraGlobal);
+                    if (lbId==0) {
+                        Producto newProd = new Producto(txtProducto.getText().toString(),
+                                Integer.parseInt(txtCantidad.getText().toString()),
+                                Double.parseDouble(txtValorUni.getText().toString()),
+                                Double.parseDouble(txtTotal.getText().toString()),
+                                idCompraGlobal);
 
-                            Producto prodCreado = conexion.agregarProducto(getApplicationContext(),newProd);
+                        Producto prodCreado = conexion.agregarProducto(getApplicationContext(),newProd);
 
-                            if (prodCreado != null){
+                        if (prodCreado != null){
 
-                                idCompraGlobal = prodCreado.getIdCompra();
-                                listaProductos = conexion.buscarProductosByCompra(getApplicationContext(),prodCreado.getIdCompra());
+                            idCompraGlobal = prodCreado.getIdCompra();
+                            listaProductos = conexion.buscarProductosByCompra(getApplicationContext(),prodCreado.getIdCompra());
+                            adapter= new CustomAdapterProductos(getApplicationContext(), listaProductos);
+                            lvProductos.setAdapter(adapter);
+                            lbId = 0;
+                            Toast.makeText(getApplicationContext(), "Producto creado exitosamente.", Toast.LENGTH_LONG).show();
+
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "ERROR: No se pudo crear el Producto.", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                    else {
+                        Producto prodEdit = conexion.buscarProductoById(getApplicationContext(), lbId);
+                        if (prodEdit != null) {
+
+                            prodEdit.setNombre(txtProducto.getText().toString());
+                            prodEdit.setCantidad(Integer.parseInt(txtCantidad.getText().toString()));
+                            prodEdit.setValorUnitario(Double.parseDouble(txtValorUni.getText().toString()));
+                            prodEdit.setTotal(Double.parseDouble(txtTotal.getText().toString()));
+
+                            prodEdit = conexion.editarProducto(getApplicationContext(), prodEdit);
+                            if (prodEdit != null){
+
+                                listaProductos = conexion.buscarProductosByCompra(getApplicationContext(),prodEdit.getIdCompra());
                                 adapter= new CustomAdapterProductos(getApplicationContext(), listaProductos);
                                 lvProductos.setAdapter(adapter);
                                 lbId = 0;
-                                Toast.makeText(getApplicationContext(), "Producto creado exitosamente.", Toast.LENGTH_LONG).show();
-
+                                Toast.makeText(getApplicationContext(), "Producto editado exitosamente.",Toast.LENGTH_LONG).show();
 
                             } else {
-                                Toast.makeText(getApplicationContext(), "ERROR: No se pudo crear el Producto.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "ERROR: No se pudo editar el Producto", Toast.LENGTH_LONG).show();
                             }
 
                         } else {
-                                Producto prodEdit = conexion.buscarProductoById(getApplicationContext(), lbId);
-                                if (prodEdit != null) {
-
-                                    prodEdit.setNombre(txtProducto.getText().toString());
-                                    prodEdit.setCantidad(Integer.parseInt(txtCantidad.getText().toString()));
-                                    prodEdit.setValorUnitario(Double.parseDouble(txtValorUni.getText().toString()));
-                                    prodEdit.setTotal(Double.parseDouble(txtTotal.getText().toString()));
-
-                                    prodEdit = conexion.editarProducto(getApplicationContext(), prodEdit);
-                                    if (prodEdit != null){
-
-                                        listaProductos = conexion.buscarProductosByCompra(getApplicationContext(),prodEdit.getIdCompra());
-                                        adapter= new CustomAdapterProductos(getApplicationContext(), listaProductos);
-                                        lvProductos.setAdapter(adapter);
-                                        lbId = 0;
-                                        Toast.makeText(getApplicationContext(), "Producto editado exitosamente.",Toast.LENGTH_LONG).show();
-
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), "ERROR: No se pudo editar el Producto", Toast.LENGTH_LONG).show();
-                                    }
-
-                                } else {
-                                    Toast.makeText(getApplicationContext(),"No se encuentra producto con id "+prodEdit.getId(),Toast.LENGTH_SHORT).show();
-                                }
+                            Toast.makeText(getApplicationContext(),"No se encuentra producto con id "+prodEdit.getId(),Toast.LENGTH_SHORT).show();
                         }
-
-                        limpiarCampos();
-                        calcularTotalFinal();
-                        conexion.actualizarCompra(getApplicationContext(), idCompraGlobal,listaProductos.size(),totalFinal);
-
-                    } else {
-                        Toast.makeText(getApplicationContext(),"Primero de calcular el total" , Toast.LENGTH_SHORT).show();
                     }
+
+                    limpiarCampos();
+                    calcularTotalFinal();
+                    conexion.actualizarCompra(getApplicationContext(), idCompraGlobal,listaProductos.size(),totalFinal);
                 } else {
                     Toast.makeText(getApplicationContext(),"Campos vacíos" , Toast.LENGTH_SHORT).show();
                 }
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnCalcular.setOnClickListener(new View.OnClickListener() {
+        /*btnCalcular.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(validar()){
@@ -164,15 +165,22 @@ public class MainActivity extends AppCompatActivity {
                     txtTotal.setText(calcularTotalUnd(cant,valUni).toString());
                 }
             }
+        });*/
+
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                limpiarCampos();
+            }
         });
 
         btnNuevaCompra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 txtProducto.setText("");
-                txtCantidad.setText("");
-                txtValorUni.setText("");
-                txtTotal.setText("$0");
+                txtCantidad.setText("1");
+                txtValorUni.setText("0");
+                txtTotal.setText("0");
                 txtTotalFinal.setText("$0");
                 btnDuplicarCompra.setEnabled(false);
                 idCompraGlobal = 0;
@@ -311,8 +319,57 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        txtCantidad.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Este método se llama antes de que el texto cambie.
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Este método se llama cuando el texto cambia.
+                // Validamos que los valores no estén nulos
+                if(validarValores()){
+                    int cant = Integer.parseInt(txtCantidad.getText().toString());
+                    Double valUni = Double.parseDouble(txtValorUni.getText().toString());
+
+                    txtTotal.setText(calcularTotalUnd(cant,valUni).toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Este método se llama después de que el texto cambie.
+            }
+        });
+
+        txtValorUni.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Este método se llama antes de que el texto cambie.
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Este método se llama cuando el texto cambia.
+                // Validamos que los valores no estén nulos
+                if(validarValores()){
+                    int cant = Integer.parseInt(txtCantidad.getText().toString());
+                    Double valUni = Double.parseDouble(txtValorUni.getText().toString());
+
+                    txtTotal.setText(calcularTotalUnd(cant,valUni).toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Este método se llama después de que el texto cambie.
+            }
+        });
+
     }
 
+    //Método para evitar que le den clic al botón de ir a atrás
     @Override
     public void onBackPressed() {
 
@@ -325,7 +382,7 @@ public class MainActivity extends AppCompatActivity {
             int cant = Integer.parseInt(txtCantidad.getText().toString());
             Double valUni = Double.parseDouble(txtValorUni.getText().toString());
 
-            if (!nombre.isEmpty() && cant > 0 && valUni > 0) return true;
+            if (!nombre.isEmpty() && cant >= 0 && valUni >= 0) return true;
                 else return false;
 
 
@@ -335,15 +392,32 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public boolean validarValores(){
+        try {
+
+            int cant = Integer.parseInt(txtCantidad.getText().toString());
+            System.err.println("cantiadd: |"+cant+"|");
+            Double valUni = Double.parseDouble(txtValorUni.getText().toString());
+
+            if (cant >= 0 && valUni >= 0) return true;
+            else return false;
+
+
+        } catch (Exception e){
+            return false;
+        }
+    }
+
     public Double calcularTotalUnd(int cant, Double valorUni){
         return cant * valorUni;
     }
 
     public void limpiarCampos(){
+        lbId = 0;
         txtProducto.setText("");
-        txtCantidad.setText("");
-        txtValorUni.setText("");
-        txtTotal.setText("$0");
+        txtCantidad.setText("1");
+        txtValorUni.setText("0");
+        txtTotal.setText("0");
     }
 
     public double calcularTotalFinal(){

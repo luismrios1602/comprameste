@@ -4,14 +4,16 @@
     <string name="cabecera_producto">Producto</string>
     <string name="cabecera_valor_unitario">Valor Unitario</string>
     <string name="cabecera_cantidad">Cant</string>
+    <string name="simbolo_total">$</string>
     <string name="cabecera_total">Total</string>
     <string name="cabecera_id">Id</string>
     <string name="cabecera_fecha">Fecha</string>
     <string name="cabecera_cantidad_prod">Cantidad Prod.</string>
     <string name="total_final">Total:</string>
-    <string name="total_final_inicial">$0</string>
+    <string name="total_final_inicial">0</string>
     <string name="boton_agregar">Agregar</string>
     <string name="boton_calcular">Calcular</string>
+    <string name="boton_cancelar">Cancelar</string>
     <string name="lb_cantidad_item">Cant:</string>
     <string name="lb_valUni_item">Valor Und:</string>
     <string name="lb_total_item">Total:</string>
