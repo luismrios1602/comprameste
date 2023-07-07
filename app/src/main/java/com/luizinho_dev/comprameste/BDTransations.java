@@ -16,7 +16,7 @@ public class BDTransations {
     public BDTransations() {
     }
 
-    public Producto agregarProducto(Context context, Producto newProd){
+    public Producto agregarProducto(Context context, Producto newProd, String nombreCompra){
 
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(context);
         SQLiteDatabase db = admin.getWritableDatabase();
@@ -37,10 +37,12 @@ public class BDTransations {
 
             } else {
 
+                //Si no tiene id de compra, entonces creamos la compra antes de guardar el producto
                 ContentValues compra = new ContentValues();
                 Date fecha = new Date();
                 String fechaFormat = formatterFecha.format(fecha);
                 compra.put("fecha",fechaFormat);
+                compra.put("nombre",nombreCompra);
                 //compra.put("cant_prod",cantProd);
                 //compra.put("total",totalFinal);
 
@@ -252,8 +254,9 @@ public class BDTransations {
                     String fecha = registro.getString(1);
                     int cant_prod = registro.getInt(2);
                     double valor_total = registro.getDouble(3);
+                    String nombre = registro.getString(4);
 
-                    compra = new Compra(id, fecha, cant_prod, valor_total);
+                    compra = new Compra(id, fecha, cant_prod, valor_total, nombre);
                     listaCompras.add(compra);
                 }while(registro.moveToNext());
             }
@@ -268,13 +271,48 @@ public class BDTransations {
 
     }
 
-    public void actualizarCompra(Context context, int idCompra, int cantProd, double total){
+    public ArrayList<Compra> buscarCompraById(Context context, int idCompra){
+        System.out.println("Consultando compras");
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(context);
+        SQLiteDatabase db = admin.getWritableDatabase();
+
+        Compra compra = null;
+        ArrayList<Compra> listaCompras = new ArrayList<>();
+
+        try {
+
+            Cursor registro = db.rawQuery("SELECT * FROM Compras WHERE id ="+idCompra, null);
+            if (registro.moveToFirst()){
+                do{
+                    int id = registro.getInt(0);
+                    String fecha = registro.getString(1);
+                    int cant_prod = registro.getInt(2);
+                    double valor_total = registro.getDouble(3);
+                    String nombre = registro.getString(4);
+
+                    compra = new Compra(id, fecha, cant_prod, valor_total, nombre);
+                    listaCompras.add(compra);
+                }while(registro.moveToNext());
+            }
+
+            registro.close();
+            return listaCompras;
+
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return new ArrayList<>();
+        }
+
+    }
+
+    public void actualizarCompra(Context context, int idCompra, int cantProd, double total, String nombre){
 
         try {
             AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(context);
             SQLiteDatabase db = admin.getWritableDatabase();
+            nombre = (nombre.equals(""))?"NN":nombre;
 
-            db.execSQL("UPDATE Compras SET cant_prod = "+cantProd+", total = "+total+" WHERE id ="+idCompra);
+            db.execSQL("UPDATE Compras SET nombre = '"+nombre+"', cant_prod = "+cantProd+", total = "+total+" WHERE id ="+idCompra);
             db.close();
         } catch (Exception e){
             System.out.println(e);

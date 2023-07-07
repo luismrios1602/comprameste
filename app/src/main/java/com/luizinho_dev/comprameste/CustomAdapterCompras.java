@@ -39,7 +39,7 @@ public class CustomAdapterCompras extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView txtIdCompra, txtFecha, txtCantProdCompra, txtTotalCompra, lbIdCompra, lbFecha, lbCantProdCompra, lbTotalCompra;
+        TextView txtIdCompra, txtFecha, txtCantProdCompra, txtTotalCompra, txtNombreCompraHis, lbIdCompra, lbFecha, lbCantProdCompra, lbTotalCompra;
 
         Compra compra = listaCompras.get(position);
 
@@ -50,6 +50,7 @@ public class CustomAdapterCompras extends BaseAdapter {
             txtFecha = convertView.findViewById(R.id.txtFecha);
             txtCantProdCompra = convertView.findViewById(R.id.txtCantProdCompra);
             txtTotalCompra = convertView.findViewById(R.id.txtTotalCompra);
+            txtNombreCompraHis = convertView.findViewById(R.id.txtNombreCompraHis);
 
             lbIdCompra = convertView.findViewById(R.id.lbIdCompra);
             lbFecha = convertView.findViewById(R.id.lbFecha);
@@ -62,6 +63,7 @@ public class CustomAdapterCompras extends BaseAdapter {
             txtFecha = convertView.findViewById(R.id.txtFecha);
             txtCantProdCompra = convertView.findViewById(R.id.txtCantProdCompra);
             txtTotalCompra = convertView.findViewById(R.id.txtTotalCompra);
+            txtNombreCompraHis = convertView.findViewById(R.id.txtNombreCompraHis);
 
             lbIdCompra = convertView.findViewById(R.id.lbIdCompra);
             lbFecha = convertView.findViewById(R.id.lbFecha);
@@ -70,10 +72,12 @@ public class CustomAdapterCompras extends BaseAdapter {
 
         }
 
+        txtNombreCompraHis.setText(String.valueOf(compra.getNombre()));
         txtIdCompra.setText(String.valueOf(compra.getId()));
         txtFecha.setText(compra.getFecha());
         txtCantProdCompra.setText(String.valueOf(compra.getCantProductos()));
         txtTotalCompra.setText("$"+ formatterDecimal.format(compra.getTotal()));
+
 
         return convertView;
     }

@@ -37,6 +37,7 @@ public class HistorialActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                 intent.putExtra("idCompra",listaCompras.get(position).getId());
+                intent.putExtra("nombreCompra",listaCompras.get(position).getNombre());
                 startActivity(intent);
                 return true;
             }

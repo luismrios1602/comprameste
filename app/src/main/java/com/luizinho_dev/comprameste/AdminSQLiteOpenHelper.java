@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "DBComprameste";
 
     //Constructor para crear la base de datos
@@ -20,6 +20,7 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE Compras(" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "nombre TEXT DEFAULT NULL, " +
                 "fecha String NOT NULL, " +
                 "cant_prod INTEGER, " +
                 "total DOUBLE)");
@@ -37,8 +38,23 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS Productos");
-        db.execSQL("DROP TABLE IF EXISTS Compras");
-        onCreate(db);
+        if (oldVersion > 2){
+
+            if (oldVersion > 3){
+                //Si la versiones la 4 o más es porque ya está actualizada
+            } else {
+                //Si es mayor que 2 pero no mayor que 3, actualizamos todo lo que haya atrasado
+                db.execSQL("ALTER TABLE Compras ADD COLUMN nombre TEXT DEFAULT NULL");
+            }
+        } else {
+
+            //Si la versión de la BD del cliente es 2 o menor, que cree la BD de nuevo
+            db.execSQL("DROP TABLE IF EXISTS Productos");
+            db.execSQL("DROP TABLE IF EXISTS Compras");
+            onCreate(db);
+        }
+
     }
+
+
 }

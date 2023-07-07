@@ -10,7 +10,7 @@
         android:id="@+id/miScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="20dp"
+        android:padding="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -34,41 +34,69 @@
                 android:textColor="#000"
                 android:textStyle="bold"
                 app:fontFamily="sans-serif" />
-
-            <Button
-                android:id="@+id/btnHistorial"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/boton_historial"
-                app:backgroundTint="@color/gray"
-                app:icon="?attr/actionModePasteDrawable" />
-
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_gravity="center">
 
                 <Button
                     android:id="@+id/btnNuevaCompra"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:cornerRadius="50sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp"
+                    android:textSize="12sp"
+                    app:iconSize="14sp"
                     android:text="@string/boton_nueva_compra"
-                    app:icon="@drawable/ic_action_name" />
+                    app:icon="@drawable/ic_action_name"
+                    android:layout_gravity="center"/>
+
+                <Button
+                    android:id="@+id/btnHistorial"
+                    app:cornerRadius="50sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/boton_historial"
+                    app:backgroundTint="@color/gray"
+                    android:textSize="12sp"
+                    app:iconSize="14sp"
+                    app:icon="?attr/actionModePasteDrawable"
+                    android:layout_gravity="center"/>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/txtNombreCompra"
+                    style="@style/Widget.AppCompat.EditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:autofillHints="true"
+                    android:textSize="16sp"
+                    android:textAlignment="center"
+                    android:hint="@string/lb_nombre_compra"
+                    android:inputType="textCapSentences"
+                    tools:ignore="LabelFor"
+                    android:gravity="center_horizontal" />
 
                 <Button
                     android:id="@+id/btnDuplicarCompra"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_width="0dp"
+                    app:cornerRadius="50sp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:text="@string/boton_duplicar_compra"
                     android:textSize="12sp"
-                    app:icon="?attr/actionModeCopyDrawable" />
-            </LinearLayout>
+                    app:iconSize="14sp"
+                    app:icon="?attr/actionModeCopyDrawable"
+                    android:layout_gravity="center"/>
 
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -278,7 +306,7 @@
                 android:layout_height="2000dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
                 android:baselineAligned="false"

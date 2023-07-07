@@ -22,11 +22,12 @@ import com.example.comprameste.R;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     ScrollView miScrollView;
-    EditText txtProducto,txtCantidad, txtValorUni;
+    EditText txtProducto,txtCantidad, txtValorUni, txtNombreCompra;
     TextView txtTotalFinal, txtTotal;
     Button btnAgregar,btnCalcular, btnCancelar, btnNuevaCompra, btnHistorial, btnDuplicarCompra;
     ListView lvProductos;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         miScrollView = (ScrollView) findViewById(R.id.miScrollView);
 
+        txtNombreCompra = (EditText) findViewById(R.id.txtNombreCompra);
         txtProducto = (EditText) findViewById(R.id.txtProducto);
         txtCantidad = (EditText) findViewById(R.id.txtCantidad);
         txtCantidad.setText("");
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         //Si no venimos desde allí (O se le da atrás) el bundle viene null
         if(bundle != null){
             System.out.println("idCompra seleccionada: "+bundle.getInt("idCompra"));
+            txtNombreCompra.setText(bundle.getString("nombreCompra"));
             idCompraGlobal = (bundle.getInt("idCompra")!=0)?bundle.getInt("idCompra"):0;
             btnDuplicarCompra.setEnabled(true);
 
@@ -86,17 +89,32 @@ public class MainActivity extends AppCompatActivity {
             btnDuplicarCompra.setEnabled(false);
         }
 
+        //Si no hay id de compra es porque apenas estoy entrando a la app así que cargamos la última compra
         if(idCompraGlobal == 0){
             cargarUltimaCompra(getApplicationContext());
         } else {
             buscarProductosByCompra(getApplicationContext(), idCompraGlobal);
         }
 
+        txtNombreCompra.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(idCompraGlobal != 0){
+                    String nombreCompra = txtNombreCompra.getText().toString();
+                    System.out.println("Actualizando compra...");
+                    conexion.actualizarCompra(getApplicationContext(), idCompraGlobal,listaProductos.size(),totalFinal, nombreCompra);
+                }
+            }
+        });
         btnAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if(validar()){
+                    //Si los valores están bien, agregamos el nombre de la nombre
+                    String nombreCompra = txtNombreCompra.getText().toString();
+
+                    //Revisamos que el id del producto actual sea diferente de 0 para saber si agregamos o editamos
                     if (lbId==0) {
                         Producto newProd = new Producto(txtProducto.getText().toString(),
                                 Integer.parseInt(txtCantidad.getText().toString()),
@@ -104,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                                 Double.parseDouble(txtTotal.getText().toString()),
                                 idCompraGlobal);
 
-                        Producto prodCreado = conexion.agregarProducto(getApplicationContext(),newProd);
+                        Producto prodCreado = conexion.agregarProducto(getApplicationContext(),newProd,nombreCompra);
 
                         if (prodCreado != null){
 
@@ -122,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                     else {
+                        //Si tenemos un id de producto, entonces lo editamos
                         Producto prodEdit = conexion.buscarProductoById(getApplicationContext(), lbId);
                         if (prodEdit != null) {
 
@@ -150,7 +169,8 @@ public class MainActivity extends AppCompatActivity {
 
                     limpiarCampos();
                     calcularTotalFinal();
-                    conexion.actualizarCompra(getApplicationContext(), idCompraGlobal,listaProductos.size(),totalFinal);
+                    //Al final actualizamos los datos de la compra
+                    conexion.actualizarCompra(getApplicationContext(), idCompraGlobal,listaProductos.size(),totalFinal, nombreCompra);
                 } else {
                     Toast.makeText(getApplicationContext(),"Campos vacíos" , Toast.LENGTH_SHORT).show();
                 }
@@ -186,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 txtValorUni.setText("");
                 txtTotal.setText("0");
                 txtTotalFinal.setText("$0");
+                txtNombreCompra.setText("");
                 btnDuplicarCompra.setEnabled(false);
                 idCompraGlobal = 0;
                 listaProductos.clear();
@@ -199,6 +220,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Producto prodElim = conexion.buscarProductoById(getApplicationContext(), listaProductos.get(position).getId());
+                String nombreCompra = txtNombreCompra.getText().toString();
 
                 if (prodElim != null) {
 
@@ -215,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 calcularTotalFinal();
-                conexion.actualizarCompra(getApplicationContext(), idCompraGlobal,listaProductos.size(),totalFinal);
+                conexion.actualizarCompra(getApplicationContext(), idCompraGlobal,listaProductos.size(),totalFinal, nombreCompra);
                 return true;
             }
         });
@@ -288,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (listaProductos.size() > 0){
+                    String nombreCompra = txtNombreCompra.getText().toString() + " duplicado";
                     String nombre;
                     int cantidad;
                     double valorUnitario;
@@ -301,19 +324,19 @@ public class MainActivity extends AppCompatActivity {
                         total = listaProductos.get(i).getTotal();
 
                         Producto newProd = new Producto(nombre,cantidad,valorUnitario,total);
-
+                        //Al primer producto le creamos la nueva compra a duplicar con todo y nombre (Le colocamos un copia al lado)
                         if(i==0){
-                            newProd = conexion.agregarProducto(getApplicationContext(),newProd);
+                            newProd = conexion.agregarProducto(getApplicationContext(),newProd,nombreCompra);
                             idCompra = newProd.getIdCompra();
                         } else {
                             newProd.setIdCompra(idCompra);
-                            newProd = conexion.agregarProducto(getApplicationContext(),newProd);
+                            newProd = conexion.agregarProducto(getApplicationContext(),newProd,nombreCompra);
                         }
                     }
 
                     idCompraGlobal = idCompra;
                     buscarProductosByCompra(getApplicationContext(), idCompraGlobal);
-                    conexion.actualizarCompra(getApplicationContext(),idCompraGlobal,listaProductos.size(),totalFinal);
+                    conexion.actualizarCompra(getApplicationContext(),idCompraGlobal,listaProductos.size(),totalFinal, nombreCompra);
 
                     Toast.makeText(getApplicationContext(),"Compra duplicada exitosamente." , Toast.LENGTH_LONG).show();
 
@@ -455,17 +478,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void cargarUltimaCompra(Context context){
+        String nombreCompra;
+        List<Compra> listaUltCompras;
 
         listaProductos = conexion.buscarProductosUltimaCompra(context);
         if (listaProductos.size() > 0){
             idCompraGlobal = listaProductos.get(0).getIdCompra();
+            listaUltCompras = conexion.buscarCompraById(context,idCompraGlobal);
             System.out.println("idCompra "+ idCompraGlobal);
+
         } else {
             idCompraGlobal = 0;
+            listaUltCompras = new ArrayList<>();
         }
         adapter= new CustomAdapterProductos(getApplicationContext(), listaProductos);
         lvProductos.setAdapter(adapter);
         calcularTotalFinal();
+
+        //Asignar nombre de la compra
+        if (listaUltCompras.size() > 0){
+            txtNombreCompra.setText(listaUltCompras.get(0).getNombre());
+        }
     }
 
     public void buscarProductosByCompra(Context context, int idCompra){

@@ -22,8 +22,10 @@
     <string name="boton_historial">Historial</string>
     <string name="boton_duplicar_compra">Duplicar Compra</string>
     <string name="cabecera_compras_realizadas">Compras Realizadas</string>
+    <string name="cabecera_nombre_compra">Nombre</string>
     <string name="lb_lista_productos">↓ Lista de productos ↓</string>
     <string name="lb_lista_compras">↓ Lista de compras ↓</string>
     <string name="lb_info_lista_productos">Presionar para editar | Mantener para eliminar</string>
     <string name="lb_info_lista_compras">Mantener para ver detallado</string>
+    <string name="lb_nombre_compra">Nombre de la Compra</string>
 </resources>

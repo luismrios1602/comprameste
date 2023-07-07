@@ -8,6 +8,7 @@ public class Compra implements Serializable {
     public String fecha;
     public int cantProductos;
     public double total;
+    private String nombre;
 
     public Compra() {
 
@@ -18,6 +19,14 @@ public class Compra implements Serializable {
         this.fecha = fecha;
         this.cantProductos = cantProductos;
         this.total = total;
+    }
+
+    public Compra(int id, String fecha, int cantProductos, double total, String nombre) {
+        this.id = id;
+        this.fecha = fecha;
+        this.cantProductos = cantProductos;
+        this.total = total;
+        this.nombre = nombre;
     }
 
     public Compra(int id, String fecha) {
@@ -55,5 +64,13 @@ public class Compra implements Serializable {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 }
