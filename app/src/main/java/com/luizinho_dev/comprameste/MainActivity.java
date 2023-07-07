@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     int idCompraGlobal = 0;
     double totalFinal = 0.0;
 
+    long exitTime = System.currentTimeMillis();
+
     DecimalFormat formatea = new DecimalFormat("###,###.##");
 
     ArrayList<Producto> listaProductos = new ArrayList<>();
@@ -55,9 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
         txtProducto = (EditText) findViewById(R.id.txtProducto);
         txtCantidad = (EditText) findViewById(R.id.txtCantidad);
-        txtCantidad.setText("1");
+        txtCantidad.setText("");
         txtValorUni = (EditText) findViewById(R.id.txtValorUnitario);
-        txtValorUni.setText("0");
+        txtValorUni.setText("");
         txtTotal = (TextView) findViewById(R.id.txtTotal);
         txtTotalFinal = (TextView) findViewById(R.id.txtTotalFinal);
         btnAgregar = (Button) findViewById(R.id.btnAgregar);
@@ -180,8 +182,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 txtProducto.setText("");
-                txtCantidad.setText("1");
-                txtValorUni.setText("0");
+                txtCantidad.setText("");
+                txtValorUni.setText("");
                 txtTotal.setText("0");
                 txtTotalFinal.setText("$0");
                 btnDuplicarCompra.setEnabled(false);
@@ -374,26 +376,44 @@ public class MainActivity extends AppCompatActivity {
     //Método para evitar que le den clic al botón de ir a atrás
     @Override
     public void onBackPressed() {
-
+        /*//Antes de salir validar si han pasado hasta 5 segundos antes de cerrar de nuevo la app
+        if ((this.exitTime + 5000) < System.currentTimeMillis()){
+            Toast.makeText(getApplicationContext(),"Presionar nuevamente para salir." , Toast.LENGTH_SHORT).show();
+            //Si no han pasado 5 segundos, entonces le asignamos el valor actual para que espere 5 segundos de cuando dio clic
+            this.exitTime = System.currentTimeMillis();
+        } else {
+            finish();
+        }*/
     }
 
     public boolean validar(){
         try {
-
+            //Validamos primero el nombre y así nos ahorramos validar el resto si el nombre está vacío
             String nombre = txtProducto.getText().toString();
+            if (nombre.isEmpty()) return false;
+
+            //Validamos si la cantidad está vacía y la seteamos por defecto a 1 (Para evitar escribirla)
+            String cantString = txtCantidad.getText().toString();
+            if (cantString.equals("")) txtCantidad.setText("1");
+
+            //Validamos si el valor unitario está vacío y lo seteamos por defecto a 0 (Para evitar escribirla)
+            String valUniString = txtValorUni.getText().toString();
+            if (valUniString.equals("")) txtValorUni.setText("0");
+
             int cant = Integer.parseInt(txtCantidad.getText().toString());
             Double valUni = Double.parseDouble(txtValorUni.getText().toString());
 
             if (!nombre.isEmpty() && cant >= 0 && valUni >= 0) return true;
                 else return false;
 
-
-        } catch (Exception e){
+        } catch (Exception e) {
+            System.out.println(e);
             return false;
         }
 
     }
 
+    /** @description Método para validar los valores de cantidad y valor unitario antes de calcular total unitario */
     public boolean validarValores(){
         try {
 
@@ -417,8 +437,8 @@ public class MainActivity extends AppCompatActivity {
     public void limpiarCampos(){
         lbId = 0;
         txtProducto.setText("");
-        txtCantidad.setText("1");
-        txtValorUni.setText("0");
+        txtCantidad.setText("");
+        txtValorUni.setText("");
         txtTotal.setText("0");
     }
 
@@ -461,14 +481,5 @@ public class MainActivity extends AppCompatActivity {
         lvProductos.setAdapter(adapter);
         calcularTotalFinal();
     }
-
-
-
-
-
-
-
-
-
 
 }

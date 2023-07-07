@@ -155,6 +155,7 @@
                     android:layout_height="wrap_content"
                     android:autofillHints="yes"
                     android:ems="10"
+                    android:hint="1"
                     android:inputType="number"
                     tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
@@ -164,6 +165,7 @@
                     android:layout_height="wrap_content"
                     android:autofillHints="true"
                     android:ems="10"
+                    android:hint="0"
                     android:inputType="numberDecimal"
                     tools:ignore="LabelFor" />
 
@@ -243,6 +245,31 @@
                     android:text="@string/boton_agregar"
                     app:backgroundTint="@color/green_crack"
                     app:icon="@drawable/ic_launcher_add" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/lbListaProductos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lb_lista_productos"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+
+                <TextView
+                    android:id="@+id/lbInfoListaProductos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lb_info_lista_productos"
+                    android:gravity="center"
+                    android:textStyle="italic"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
             </LinearLayout>
 
             <ListView
