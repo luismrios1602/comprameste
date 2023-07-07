@@ -20,10 +20,10 @@ public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE Compras(" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "nombre TEXT DEFAULT NULL, " +
                 "fecha String NOT NULL, " +
                 "cant_prod INTEGER, " +
-                "total DOUBLE)");
+                "total DOUBLE," +
+                "nombre TEXT DEFAULT NULL)");
 
         db.execSQL("CREATE TABLE Productos(" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
