@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
         //Cargamos la informacion de la ultima compra y seteamos los valores de nombre y total
         cargarInfoUltimaCompra();
 
-
-
         //Usamos el objeto de Logica para usar su lista de productos y cargar el listview a la primera
         actualizarAdapter();
 
@@ -171,7 +169,60 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void crearProducto(){
 
+        boolean prodCreado = mainLogica.crearProducto(txtProducto.getText().toString(),
+                Integer.parseInt(txtCantidad.getText().toString()),
+                Double.parseDouble(txtValorUni.getText().toString()),
+                Double.parseDouble(txtTotal.getText().toString()),
+                mainLogica.compraActu.getId());
+
+        //Si se creó el producto exitosamente
+        if (prodCreado){
+
+            mainLogica.cargarProductosByCompra(mainLogica.compraActu.getId());
+            actualizarAdapter();
+            lbId = 0;
+            Toast.makeText(getApplicationContext(), "Producto creado exitosamente.", Toast.LENGTH_LONG).show();
+
+        } else {
+            Toast.makeText(getApplicationContext(), "ERROR: No se pudo crear el Producto.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void actualizarProducto(int idProd){
+        String nombre = txtProducto.getText().toString();
+        int cantidad = Integer.parseInt(txtCantidad.getText().toString());
+        double valorUnitario = Double.parseDouble(txtValorUni.getText().toString());
+        double total = Double.parseDouble(txtTotal.getText().toString());
+
+        boolean prodActualizado = mainLogica.actualizarProducto(idProd, nombre, cantidad, valorUnitario, total, mainLogica.compraActu.getId());
+
+        if (prodActualizado){
+            //Si se actualizó correctamente tenemos que actualizar el adapter
+            mainLogica.cargarProductosCompraActual();
+            actualizarAdapter();
+            Toast.makeText(getApplicationContext(), "Producto editado exitosamente.",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "ERROR: No se pudo editar el Producto", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    public void actualizarAdapter(){
+        adapter= new CustomAdapterProductos(getApplicationContext(), mainLogica.listaProductos);
+        lvProductos.setAdapter(adapter);
+    }
+
+    public void cargarInfoUltimaCompra(){
+        mainLogica.cargarUltimaCompra();
+        txtNombreCompra.setText(mainLogica.compraActu.getNombre());
+
+        System.out.println("totalCompra: "+mainLogica.compraActu.getTotal());
+        txtTotalFinal.setText("$"+formatea.format(mainLogica.compraActu.getTotal()));
+
+
+    }
 
     /**
      * @description Método para cargar todos los elementos del XML al java para manipularlos
@@ -440,59 +491,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void crearProducto(){
 
-        boolean prodCreado = mainLogica.crearProducto(txtProducto.getText().toString(),
-                Integer.parseInt(txtCantidad.getText().toString()),
-                Double.parseDouble(txtValorUni.getText().toString()),
-                Double.parseDouble(txtTotal.getText().toString()),
-                mainLogica.compraActu.getId());
-
-        //Si se creó el producto exitosamente
-        if (prodCreado){
-
-            mainLogica.cargarProductosByCompra(mainLogica.compraActu.getId());
-            actualizarAdapter();
-            lbId = 0;
-            Toast.makeText(getApplicationContext(), "Producto creado exitosamente.", Toast.LENGTH_LONG).show();
-
-        } else {
-            Toast.makeText(getApplicationContext(), "ERROR: No se pudo crear el Producto.", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void actualizarProducto(int idProd){
-        String nombre = txtProducto.getText().toString();
-        int cantidad = Integer.parseInt(txtCantidad.getText().toString());
-        double valorUnitario = Double.parseDouble(txtValorUni.getText().toString());
-        double total = Double.parseDouble(txtTotal.getText().toString());
-
-        boolean prodActualizado = mainLogica.actualizarProducto(idProd, nombre, cantidad, valorUnitario, total, mainLogica.compraActu.getId());
-
-        if (prodActualizado){
-            //Si se actualizó correctamente tenemos que actualizar el adapter
-            mainLogica.cargarProductosCompraActual();
-            actualizarAdapter();
-            Toast.makeText(getApplicationContext(), "Producto editado exitosamente.",Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "ERROR: No se pudo editar el Producto", Toast.LENGTH_LONG).show();
-        }
-
-    }
-
-    public void actualizarAdapter(){
-        adapter= new CustomAdapterProductos(getApplicationContext(), mainLogica.listaProductos);
-        lvProductos.setAdapter(adapter);
-    }
-
-    public void cargarInfoUltimaCompra(){
-        mainLogica.cargarUltimaCompra();
-        txtNombreCompra.setText(mainLogica.compraActu.getNombre());
-
-        System.out.println("totalCompra: "+mainLogica.compraActu.getTotal());
-        txtTotalFinal.setText("$"+formatea.format(mainLogica.compraActu.getTotal()));
-
-
-    }
 
 }

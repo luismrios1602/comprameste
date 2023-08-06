@@ -13,14 +13,16 @@ import com.example.comprameste.R;
 import com.luizinho_dev.comprameste.BDTransations;
 import com.luizinho_dev.comprameste.Compra;
 import com.luizinho_dev.comprameste.CustomAdapters.CustomAdapterCompras;
+import com.luizinho_dev.comprameste.Logica.HistorialLogica;
 
 import java.util.ArrayList;
 
 public class HistorialActivity extends AppCompatActivity {
 
+    HistorialLogica historialLogica = new HistorialLogica();
+
     ListView lvCompras;
 
-    ArrayList<Compra> listaCompras = new ArrayList();
     CustomAdapterCompras adapter;
     BDTransations conexion = new BDTransations();
 
@@ -29,29 +31,44 @@ public class HistorialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historial);
 
-        lvCompras = (ListView) findViewById(R.id.lvCompras);
-        adapter= new CustomAdapterCompras(getApplicationContext(), listaCompras);
-        lvCompras.setAdapter(adapter);
+        cargarElementos();
 
-        buscarCompras(getApplicationContext());
+        historialLogica.cargarBD(getApplicationContext());
 
+        cargarCompras();
+
+        asignarEventos();
+
+    }
+
+    private void asignarEventos() {
+
+        //#region ListView lvCompras
         lvCompras.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("idCompra",listaCompras.get(position).getId());
-                intent.putExtra("nombreCompra",listaCompras.get(position).getNombre());
+                intent.putExtra("idCompra",historialLogica.listaCompras.get(position).getId());
+                intent.putExtra("nombreCompra",historialLogica.listaCompras.get(position).getNombre());
                 startActivity(intent);
                 return true;
             }
         });
-
+        //#endregion
     }
-    
-    public void buscarCompras(Context context){
 
-        listaCompras = conexion.buscarCompras(context);
-        adapter= new CustomAdapterCompras(getApplicationContext(), listaCompras);
+    public void cargarCompras(){
+
+        historialLogica.buscarCompras();
+        actualizarAdapter();
+    }
+
+    public void actualizarAdapter(){
+        adapter= new CustomAdapterCompras(getApplicationContext(), historialLogica.listaCompras);
         lvCompras.setAdapter(adapter);
+    }
+
+    public void cargarElementos(){
+        lvCompras = findViewById(R.id.lvCompras);
     }
 }

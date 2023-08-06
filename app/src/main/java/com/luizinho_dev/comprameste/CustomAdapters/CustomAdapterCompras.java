@@ -9,16 +9,17 @@ import android.widget.TextView;
 
 import com.example.comprameste.R;
 import com.luizinho_dev.comprameste.Compra;
+import com.luizinho_dev.comprameste.Entities.Compras;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class CustomAdapterCompras extends BaseAdapter {
     Context context;
-    ArrayList<Compra> listaCompras;
+    ArrayList<Compras> listaCompras;
     DecimalFormat formatterDecimal = new DecimalFormat("###,###.##");
 
-    public CustomAdapterCompras(Context context, ArrayList<Compra> listaCompras) {
+    public CustomAdapterCompras(Context context, ArrayList<Compras> listaCompras) {
         this.context = context;
         this.listaCompras = listaCompras;
     }
@@ -42,7 +43,7 @@ public class CustomAdapterCompras extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView txtIdCompra, txtFecha, txtCantProdCompra, txtTotalCompra, txtNombreCompraHis, lbIdCompra, lbFecha, lbCantProdCompra, lbTotalCompra;
 
-        Compra compra = listaCompras.get(position);
+        Compras compra = listaCompras.get(position);
 
         //Verificamos si la vista de ese item ya existe, sino la "inflamos" para mostrar. Si está actualizamos sus datos
         if(convertView == null) {
