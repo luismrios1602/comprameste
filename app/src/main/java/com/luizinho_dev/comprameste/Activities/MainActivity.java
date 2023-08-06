@@ -7,9 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -18,14 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.comprameste.R;
-import com.luizinho_dev.comprameste.BDTransations;
 import com.luizinho_dev.comprameste.CustomAdapters.CustomAdapterProductos;
 import com.luizinho_dev.comprameste.Entities.Compras;
 import com.luizinho_dev.comprameste.Logica.MainLogica;
-import com.luizinho_dev.comprameste.Producto;
-
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,16 +30,13 @@ public class MainActivity extends AppCompatActivity {
     ListView lvProductos;
 
     int lbId = 0;
-    int idCompraGlobal = 0;
     double totalFinal = 0.0;
 
     long exitTime = System.currentTimeMillis();
 
     DecimalFormat formatea = new DecimalFormat("###,###.##");
 
-    ArrayList<Producto> listaProductos = new ArrayList<>();
     CustomAdapterProductos adapter;
-    BDTransations conexion = new BDTransations();
 
     Bundle bundle;
     MainLogica mainLogica = new MainLogica();
@@ -57,16 +47,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Cargamos la base de datos desde ROOM (En la logica)
-        mainLogica.cargarBD(getApplicationContext());
-        mainLogica.cargarUltimaCompra();
-
         //Cargamos los elementos de la vista al "back"
         cargarElementos();
 
+        //Cargamos la base de datos desde ROOM (En la logica)
+        mainLogica.cargarBD(getApplicationContext());
+
+        //Cargamos la informacion de la ultima compra y seteamos los valores de nombre y total
+        cargarInfoUltimaCompra();
+
+
+
         //Usamos el objeto de Logica para usar su lista de productos y cargar el listview a la primera
-        adapter= new CustomAdapterProductos(getApplicationContext(), mainLogica.listaProductos);
-        lvProductos.setAdapter(adapter);
+        actualizarAdapter();
 
         //Llamamos el bundle por si venimos desde la actividad Historial
         bundle = getIntent().getExtras();
@@ -153,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void limpiarCampos(){
+
         lbId = 0;
         txtProducto.setText("");
         txtCantidad.setText("");
@@ -163,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     public void calcularTotalFinal(){
         //Actualizamos la lista de productos del front
-        mainLogica.cargarProductosByCompra(idCompraGlobal);
+        mainLogica.cargarProductosByCompra(mainLogica.compraActu.getId());
 
         double total = 0.0;
         for (int i = 0; i< mainLogica.listaProductos.size(); i++){
@@ -172,6 +166,8 @@ public class MainActivity extends AppCompatActivity {
 
         totalFinal = total;
         txtTotalFinal.setText("$"+formatea.format(total));
+        //Actualizamos la compra actual cada vez que se calcule el totalFinal
+        mainLogica.actualizarCompra(mainLogica.compraActu.getId(), mainLogica.listaProductos.size(), totalFinal, mainLogica.compraActu.getNombre());
 
     }
 
@@ -183,22 +179,22 @@ public class MainActivity extends AppCompatActivity {
     private void cargarElementos(){
 
         //Llamamos todos los objetos del front que vamos a utilizar
-        miScrollView = (ScrollView) findViewById(R.id.miScrollView);
-        txtNombreCompra = (EditText) findViewById(R.id.txtNombreCompra);
-        txtProducto = (EditText) findViewById(R.id.txtProducto);
-        txtCantidad = (EditText) findViewById(R.id.txtCantidad);
+        miScrollView = findViewById(R.id.miScrollView);
+        txtNombreCompra = findViewById(R.id.txtNombreCompra);
+        txtProducto = findViewById(R.id.txtProducto);
+        txtCantidad = findViewById(R.id.txtCantidad);
         txtCantidad.setText("");
-        txtValorUni = (EditText) findViewById(R.id.txtValorUnitario);
+        txtValorUni = findViewById(R.id.txtValorUnitario);
         txtValorUni.setText("");
-        txtTotal = (TextView) findViewById(R.id.txtTotal);
-        txtTotalFinal = (TextView) findViewById(R.id.txtTotalFinal);
-        btnAgregar = (Button) findViewById(R.id.btnAgregar);
-//        btnCalcular = (Button) findViewById(R.id.btnCalcular);
-        btnCancelar = (Button) findViewById(R.id.btnCancelar);
-        btnNuevaCompra = (Button) findViewById(R.id.btnNuevaCompra);
-        btnHistorial = (Button) findViewById(R.id.btnHistorial);
-        btnDuplicarCompra = (Button) findViewById(R.id.btnDuplicarCompra);
-        lvProductos = (ListView) findViewById(R.id.lvProductos);
+        txtTotal = findViewById(R.id.txtTotal);
+        txtTotalFinal = findViewById(R.id.txtTotalFinal);
+        btnAgregar = findViewById(R.id.btnAgregar);
+//        btnCalcular = findViewById(R.id.btnCalcular);
+        btnCancelar = findViewById(R.id.btnCancelar);
+        btnNuevaCompra = findViewById(R.id.btnNuevaCompra);
+        btnHistorial = findViewById(R.id.btnHistorial);
+        btnDuplicarCompra = findViewById(R.id.btnDuplicarCompra);
+        lvProductos = findViewById(R.id.lvProductos);
     }
 
     /**
@@ -208,122 +204,103 @@ public class MainActivity extends AppCompatActivity {
     private void asignarEventos(){
 
         //region Button btnAgregar
-        btnAgregar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnAgregar.setOnClickListener(v -> {
 
-                if(validar()){
+            if(validar()){
 
-                    //Revisamos que el id del producto actual sea diferente de 0 para saber si agregamos o editamos
-                    if (lbId==0) {
-                        crearProducto();
-                    } else {
-                        actualizarProducto(lbId);
-                    }
-
-                    limpiarCampos();
-                    calcularTotalFinal();
+                //Revisamos que el id del producto actual sea diferente de 0 para saber si agregamos o editamos
+                if (lbId==0) {
+                    crearProducto();
                 } else {
-                    Toast.makeText(getApplicationContext(),"Campos vacíos" , Toast.LENGTH_SHORT).show();
+                    actualizarProducto(lbId);
                 }
 
-                adapter.notifyDataSetChanged();
+                limpiarCampos();
+                calcularTotalFinal();
+            } else {
+                Toast.makeText(getApplicationContext(),"Campos vacíos" , Toast.LENGTH_SHORT).show();
             }
+
+            adapter.notifyDataSetChanged();
         });
         //endregion
 
         //region Button btnCancelar
-        btnCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                limpiarCampos();
-            }
-        });
+        btnCancelar.setOnClickListener(v -> limpiarCampos());
         //endregion
 
         //region Button btnNuevaCompra
-        btnNuevaCompra.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                txtProducto.setText("");
-                txtCantidad.setText("");
-                txtValorUni.setText("");
-                txtTotal.setText("0");
-                txtTotalFinal.setText("$0");
-                txtNombreCompra.setText("");
-                btnDuplicarCompra.setEnabled(false);
-                idCompraGlobal = 0;
-                listaProductos.clear();
-                adapter.notifyDataSetChanged();
+        btnNuevaCompra.setOnClickListener(v -> {
+            //Limpiamos los campos de productos y los datos de la compra
+            limpiarCampos();
+            txtTotalFinal.setText("$0");
+            txtNombreCompra.setText("");
+            btnDuplicarCompra.setEnabled(false);
+            mainLogica.compraActu.setId(0);
+            mainLogica.listaProductos.clear();
+            actualizarAdapter();
 
-            }
         });
 
         //endregion
 
         //region Button btnHistorial
-        btnHistorial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
-                startActivity(intent);
-            }
+        btnHistorial.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), HistorialActivity.class);
+            startActivity(intent);
         });
         //endregion
 
         //region Button btnDuplicarCompra
-        btnDuplicarCompra.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mainLogica.listaProductos.size() > 0){
-                    String nombreCompra = txtNombreCompra.getText().toString() + " duplicado";
-                    String nombre;
-                    int cantidad;
-                    double valorUnitario;
-                    double total;
-                    int idCompra = 0;
+        btnDuplicarCompra.setOnClickListener(v -> {
+            if (mainLogica.listaProductos.size() > 0){
+                String nombreCompra = txtNombreCompra.getText().toString() + " duplicado";
+                String nombre;
+                int cantidad;
+                double valorUnitario;
+                double total;
+                int idCompra;
 
-                    //Creamos la nueva compra para asignarla a los productos a crear
-                    Compras nuevaCompra = mainLogica.crearCompra(mainLogica.listaProductos.size(), totalFinal, nombreCompra);
+                //Creamos la nueva compra para asignarla a los productos a crear
+                Compras nuevaCompra = mainLogica.crearCompra(mainLogica.listaProductos.size(), mainLogica.compraActu.getTotal(), nombreCompra);
 
-                    if (nuevaCompra != null){
-                        //Si no es null la compra es porque salió todo bien
-                        idCompra = nuevaCompra.getId();
-                        mainLogica.compraActu = nuevaCompra;
+                if (nuevaCompra != null){
+                    //Si no es null la compra es porque salió todo bien
+                    idCompra = nuevaCompra.getId();
+                    mainLogica.compraActu = nuevaCompra;
 
-                        for(int i = 0; i < mainLogica.listaProductos.size(); i ++){
-                            nombre = mainLogica.listaProductos.get(i).getNombre();
-                            cantidad = mainLogica.listaProductos.get(i).getCantidad();
-                            valorUnitario = mainLogica.listaProductos.get(i).getValorUnitario();
-                            total = mainLogica.listaProductos.get(i).getTotal();
+                    for(int i = 0; i < mainLogica.listaProductos.size(); i ++){
+                        nombre = mainLogica.listaProductos.get(i).getNombre();
+                        cantidad = mainLogica.listaProductos.get(i).getCantidad();
+                        valorUnitario = mainLogica.listaProductos.get(i).getValorUnitario();
+                        total = mainLogica.listaProductos.get(i).getTotal();
 
-                            mainLogica.crearProducto(nombre,cantidad, valorUnitario, total, idCompra);
-                        }
-
-                        mainLogica.cargarProductosByCompra(idCompra);
-                        Toast.makeText(getApplicationContext(),"Compra duplicada exitosamente." , Toast.LENGTH_LONG).show();
-
-                    } else {
-                        //Si viene null la compra es porque hubo un error
-                        Toast.makeText(getApplicationContext(),"Error al duplicar la compra." , Toast.LENGTH_LONG).show();
+                        mainLogica.crearProducto(nombre,cantidad, valorUnitario, total, idCompra);
                     }
 
+                    mainLogica.cargarProductosByCompra(idCompra);
+                    Toast.makeText(getApplicationContext(),"Compra duplicada exitosamente." , Toast.LENGTH_LONG).show();
+
                 } else {
-                    Toast.makeText(getApplicationContext(),"Sin productos a duplicar." , Toast.LENGTH_SHORT).show();
+                    //Si viene null la compra es porque hubo un error
+                    Toast.makeText(getApplicationContext(),"Error al duplicar la compra." , Toast.LENGTH_LONG).show();
                 }
+
+            } else {
+                Toast.makeText(getApplicationContext(),"Sin productos a duplicar." , Toast.LENGTH_SHORT).show();
             }
         });
         //endregion
 
         //region EditText txtNombreCompra
-        txtNombreCompra.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(idCompraGlobal != 0){
-                    String nombreCompra = txtNombreCompra.getText().toString();
-                    System.out.println("Actualizando compra...");
-                    conexion.actualizarCompra(getApplicationContext(), idCompraGlobal,listaProductos.size(),totalFinal, nombreCompra);
-                }
+        txtNombreCompra.setOnFocusChangeListener((v, hasFocus) -> {
+            String nombreCompra = txtNombreCompra.getText().toString();
+            if(mainLogica.compraActu.getId() != 0){
+                System.out.println("Actualizando compra...");
+                mainLogica.actualizarCompra(mainLogica.compraActu.getId(),mainLogica.listaProductos.size(),totalFinal,nombreCompra);
+            } else {
+                //Si el id de la compra actual es 0 entonces solo le asignamos el nombre pero no la guardamos en BD
+                mainLogica.compraActu.setNombre(nombreCompra);
             }
         });
         //endregion
@@ -383,55 +360,44 @@ public class MainActivity extends AppCompatActivity {
         //endregion
 
         //region ListView lvProductos
-        lvProductos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        lvProductos.setOnItemLongClickListener((parent, view, position, id) -> {
 
-                //Eliminamos el producto de la base de datos
-                boolean prodElim = mainLogica.eliminarProducto(mainLogica.listaProductos.get(position).getId());
+            //Eliminamos el producto de la base de datos
+            boolean prodElim = mainLogica.eliminarProducto(mainLogica.listaProductos.get(position).getId());
 
-                if (prodElim) {
+            if (prodElim) {
 
-                    //Si se eliminó correctamente, lo eliminamos del array
-                    mainLogica.listaProductos.remove(position);
-                    adapter= new CustomAdapterProductos(getApplicationContext(), mainLogica.listaProductos);
-                    lvProductos.setAdapter(adapter);
+                //Si se eliminó correctamente, lo eliminamos del array
+                mainLogica.listaProductos.remove(position);
+                actualizarAdapter();
 
-                    Toast.makeText(getApplicationContext(), "Producto eliminado exitosamente.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Producto eliminado exitosamente.", Toast.LENGTH_LONG).show();
 
-                    //Calculamos el total de la compra y actualizamos los datos de esta
-                    calcularTotalFinal();
-                    mainLogica.actualizarCompra(idCompraGlobal, mainLogica.listaProductos.size(), totalFinal, txtNombreCompra.getText().toString());
+                //Calculamos el total de la compra y actualizamos los datos de esta
+                calcularTotalFinal();
+                mainLogica.actualizarCompra(mainLogica.compraActu.getId(), mainLogica.listaProductos.size(), totalFinal, txtNombreCompra.getText().toString());
 
-                } else {
-                    Toast.makeText(getApplicationContext(),"ERROR: No se pudo eliminar el registro",Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(),"ERROR: No se pudo eliminar el registro",Toast.LENGTH_LONG).show();
 
-                }
-
-                return true;
             }
+
+            return true;
         });
 
-        lvProductos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                lbId = mainLogica.listaProductos.get(position).getId();
-                txtProducto.setText(mainLogica.listaProductos.get(position).getNombre());
-                txtCantidad.setText(String.valueOf(mainLogica.listaProductos.get(position).getCantidad()));
-                txtValorUni.setText(String.valueOf(mainLogica.listaProductos.get(position).getValorUnitario()));
-                //txtTotal.setText(String.valueOf(listaProductos.get(position).getTotal()));
-                txtProducto.requestFocusFromTouch();
-            }
+        lvProductos.setOnItemClickListener((parent, view, position, id) -> {
+            lbId = mainLogica.listaProductos.get(position).getId();
+            txtProducto.setText(mainLogica.listaProductos.get(position).getNombre());
+            txtCantidad.setText(String.valueOf(mainLogica.listaProductos.get(position).getCantidad()));
+            txtValorUni.setText(String.valueOf(mainLogica.listaProductos.get(position).getValorUnitario()));
+            //txtTotal.setText(String.valueOf(listaProductos.get(position).getTotal()));
+            txtProducto.requestFocusFromTouch();
         });
 
         //Método para realizar scroll del listview dentro del scroll original
-        lvProductos.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
+        lvProductos.setOnTouchListener((v, event) -> {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
         });
 
         //Deslizar item para borrarlo
@@ -463,14 +429,10 @@ public class MainActivity extends AppCompatActivity {
         //region ScrollView miScrollView
 
         //Método para realizar scroll del listview dentro del scroll original
-        miScrollView.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                findViewById(R.id.lvProductos).getParent()
-                        .requestDisallowInterceptTouchEvent(false);
-                return false;
-            }
+        miScrollView.setOnTouchListener((v, event) -> {
+            findViewById(R.id.lvProductos).getParent()
+                    .requestDisallowInterceptTouchEvent(false);
+            return false;
         });
 
         //endregion
@@ -484,14 +446,13 @@ public class MainActivity extends AppCompatActivity {
                 Integer.parseInt(txtCantidad.getText().toString()),
                 Double.parseDouble(txtValorUni.getText().toString()),
                 Double.parseDouble(txtTotal.getText().toString()),
-                idCompraGlobal);
+                mainLogica.compraActu.getId());
 
         //Si se creó el producto exitosamente
         if (prodCreado){
 
-            mainLogica.cargarProductosByCompra(idCompraGlobal);
-            adapter= new CustomAdapterProductos(getApplicationContext(), mainLogica.listaProductos);
-            lvProductos.setAdapter(adapter);
+            mainLogica.cargarProductosByCompra(mainLogica.compraActu.getId());
+            actualizarAdapter();
             lbId = 0;
             Toast.makeText(getApplicationContext(), "Producto creado exitosamente.", Toast.LENGTH_LONG).show();
 
@@ -506,13 +467,31 @@ public class MainActivity extends AppCompatActivity {
         double valorUnitario = Double.parseDouble(txtValorUni.getText().toString());
         double total = Double.parseDouble(txtTotal.getText().toString());
 
-        boolean prodActualizado = mainLogica.actualizarProducto(idProd, nombre, cantidad, valorUnitario, total, idCompraGlobal);
+        boolean prodActualizado = mainLogica.actualizarProducto(idProd, nombre, cantidad, valorUnitario, total, mainLogica.compraActu.getId());
 
         if (prodActualizado){
+            //Si se actualizó correctamente tenemos que actualizar el adapter
+            mainLogica.cargarProductosCompraActual();
+            actualizarAdapter();
             Toast.makeText(getApplicationContext(), "Producto editado exitosamente.",Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getApplicationContext(), "ERROR: No se pudo editar el Producto", Toast.LENGTH_LONG).show();
         }
+
+    }
+
+    public void actualizarAdapter(){
+        adapter= new CustomAdapterProductos(getApplicationContext(), mainLogica.listaProductos);
+        lvProductos.setAdapter(adapter);
+    }
+
+    public void cargarInfoUltimaCompra(){
+        mainLogica.cargarUltimaCompra();
+        txtNombreCompra.setText(mainLogica.compraActu.getNombre());
+
+        System.out.println("totalCompra: "+mainLogica.compraActu.getTotal());
+        txtTotalFinal.setText("$"+formatea.format(mainLogica.compraActu.getTotal()));
+
 
     }
 

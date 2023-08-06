@@ -3,9 +3,17 @@ package com.luizinho_dev.comprameste.Entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "Productos")
+@Entity(tableName = "Productos",
+        foreignKeys = @ForeignKey(
+        entity = Compras.class,
+        parentColumns = "id",
+        childColumns = "id_compra",
+        onDelete = ForeignKey.CASCADE,
+        deferred = true
+))
 public class Productos {
 
     @PrimaryKey(autoGenerate = true)

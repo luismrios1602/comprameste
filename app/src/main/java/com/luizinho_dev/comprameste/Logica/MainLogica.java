@@ -49,8 +49,8 @@ public class MainLogica {
             Compras ultCompra = db.comprasDao().findUltimaCompra();
 
             //Si no hay ultima compra el resultado es null, por tanto si hay un objeto, buscamos los productos de dicha compra
-            if (ultCompra != null) listaProductos = (ArrayList<Productos>) db.productosDao().findProductosByIdCompra(ultCompra.id);
-            //Si está null entonces mandamos una compra
+            if (ultCompra != null) listaProductos = (ArrayList<Productos>) db.productosDao().findProductosByIdCompra(ultCompra.getId());
+            //Si está null entonces mandamos una compra nueva (con 0)
             else ultCompra = new Compras(0);
 
             //Asignamos la compraAct para que en el front se pueda utilizar esta directamente
@@ -105,6 +105,10 @@ public class MainLogica {
         listaProductos = (ArrayList<Productos>) db.productosDao().findProductosByIdCompra(idCompra);
     }
 
+    public void cargarProductosCompraActual(){
+        listaProductos = (ArrayList<Productos>) db.productosDao().findProductosByIdCompra(compraActu.getId());
+    }
+
     public Productos buscarProductoById(int idProd){
 
         try {
@@ -144,6 +148,8 @@ public class MainLogica {
             Date fecha = new Date();
             String fechaFormat = formatterFecha.format(fecha);
 
+            nombre = (nombre == null) ? "NN" : nombre;
+
             Compras compra = new Compras(fechaFormat, nombre);
             db.comprasDao().createCompra(compra);
 
@@ -161,17 +167,23 @@ public class MainLogica {
     public boolean actualizarCompra(int idCompra, int cantProductos, double total, String nombre){
 
         try {
-            //Nos traemos la compra para no perder la fecha
-            Compras compra = buscarCompraById(idCompra);
-            if (compra != null){
-                compra.setCantProductos(cantProductos);
-                compra.setTotal(total);
-                compra.setNombre(nombre);
+            //Si la compra es 0 es porque directamente no la hemos guardado así que no actualizamos
+            if (idCompra != 0){
+                //Nos traemos la compra para no perder la fecha
+                Compras compra = buscarCompraById(idCompra);
+                if (compra != null){
+                    compra.setCantProductos(cantProductos);
+                    compra.setTotal(total);
+                    compra.setNombre(nombre);
 
-                db.comprasDao().updateCompra(compra);
-                return true;
+                    db.comprasDao().updateCompra(compra);
+                    compraActu = compra;
+                    return true;
+                } else {
+                    System.out.println("Compra " + idCompra + " no encontrada.");
+                    return false;
+                }
             } else {
-                System.out.println("Compra " + idCompra + " no encontrada.");
                 return false;
             }
         } catch (Exception e){
@@ -184,7 +196,7 @@ public class MainLogica {
 
         try{
 
-            //Si el idCompra 0 entonces le creamos la compra con la que se va a guardar y de paso se la asignamos a la compra actual
+            //Si el idCompra es 0 entonces le creamos la compra con la que se va a guardar y de paso se la asignamos a la compra actual
             if (idCompra == 0){
                 Compras compra = crearCompra(compraActu.getNombre());
                 //Validamos que se haya guardado correctamente
