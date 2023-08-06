@@ -11,13 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_shop_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Comprameste">
-        <activity android:name="com.luizinho_dev.comprameste.HistorialActivity"></activity>
+        <activity android:name="com.luizinho_dev.comprameste.Activities.HistorialActivity"></activity>
         <activity
-            android:name="com.luizinho_dev.comprameste.MainActivity"
+            android:name="com.luizinho_dev.comprameste.Activities.MainActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

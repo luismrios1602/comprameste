@@ -1,4 +1,4 @@
-package com.luizinho_dev.comprameste;
+package com.luizinho_dev.comprameste.CustomAdapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.comprameste.R;
+import com.luizinho_dev.comprameste.Producto;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

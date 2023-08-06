@@ -1,4 +1,4 @@
-package com.luizinho_dev.comprameste;
+package com.luizinho_dev.comprameste.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.comprameste.R;
+import com.luizinho_dev.comprameste.BDTransations;
+import com.luizinho_dev.comprameste.Compra;
+import com.luizinho_dev.comprameste.CustomAdapters.CustomAdapterCompras;
 
 import java.util.ArrayList;
 
@@ -35,7 +38,7 @@ public class HistorialActivity extends AppCompatActivity {
         lvCompras.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("idCompra",listaCompras.get(position).getId());
                 intent.putExtra("nombreCompra",listaCompras.get(position).getNombre());
                 startActivity(intent);

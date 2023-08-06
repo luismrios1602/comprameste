@@ -1,7 +1,6 @@
 package com.luizinho_dev.comprameste;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class Compra implements Serializable {
     public int id;

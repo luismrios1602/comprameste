@@ -1,6 +1,7 @@
-package com.luizinho_dev.comprameste;
+package com.luizinho_dev.comprameste.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,6 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.comprameste.R;
+import com.luizinho_dev.comprameste.BDTransations;
+import com.luizinho_dev.comprameste.Compra;
+import com.luizinho_dev.comprameste.CustomAdapters.CustomAdapterProductos;
+import com.luizinho_dev.comprameste.Dao.ComprasDao;
+import com.luizinho_dev.comprameste.Dao.ProductosDao;
+import com.luizinho_dev.comprameste.Database.AppDatabase;
+import com.luizinho_dev.comprameste.Producto;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -26,6 +34,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    ComprasDao comprasDao;
+    ProductosDao productosDao;
     ScrollView miScrollView;
     EditText txtProducto,txtCantidad, txtValorUni, txtNombreCompra;
     TextView txtTotalFinal, txtTotal;
@@ -54,8 +64,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        miScrollView = (ScrollView) findViewById(R.id.miScrollView);
+        //Construimos la BD con ROM (Si no existe la crea, si ya existe la actualiza
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "compramesteDB").build();
+        comprasDao = db.comprasDao();
+        productosDao = db.productosDao();
 
+        //Llamamos todos los objetos del front que vamos a utilizar
+        miScrollView = (ScrollView) findViewById(R.id.miScrollView);
         txtNombreCompra = (EditText) findViewById(R.id.txtNombreCompra);
         txtProducto = (EditText) findViewById(R.id.txtProducto);
         txtCantidad = (EditText) findViewById(R.id.txtCantidad);
@@ -78,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         //Llamamos el bundle por si venimos desde la actividad Historial
         bundle = getIntent().getExtras();
         System.out.println(bundle);
+
         //Si no venimos desde allí (O se le da atrás) el bundle viene null
         if(bundle != null){
             System.out.println("idCompra seleccionada: "+bundle.getInt("idCompra"));
