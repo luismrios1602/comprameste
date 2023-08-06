@@ -16,6 +16,9 @@ public interface ProductosDao {
     @Insert
     void createProducto(Productos producto);
 
+    @Insert
+    void createProductos(Productos...productos);
+
     @Update
     void updateProducto(Productos producto);
 

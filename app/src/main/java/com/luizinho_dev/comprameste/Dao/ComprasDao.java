@@ -3,6 +3,7 @@ package com.luizinho_dev.comprameste.Dao;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.luizinho_dev.comprameste.Entities.Compras;
 
@@ -13,6 +14,9 @@ public interface ComprasDao {
 
     @Insert
     void createCompra(Compras compra);
+
+    @Update
+    void updateCompra(Compras compra);
 
     @Query("SELECT * FROM Compras")
     List<Compras> findCompras();

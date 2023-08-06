@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.comprameste.R;
+import com.luizinho_dev.comprameste.Entities.Productos;
 import com.luizinho_dev.comprameste.Producto;
 
 import java.text.DecimalFormat;
@@ -17,11 +18,11 @@ import java.util.ArrayList;
 public class CustomAdapterProductos extends BaseAdapter {
 
     Context context;
-    ArrayList<Producto> listaProd;
+    ArrayList<Productos> listaProd;
 
     DecimalFormat formatea = new DecimalFormat("###,###.##");
 
-    public CustomAdapterProductos(Context context, ArrayList<Producto> listaProd) {
+    public CustomAdapterProductos(Context context, ArrayList<Productos> listaProd) {
         this.context = context;
         this.listaProd = listaProd;
     }
@@ -45,7 +46,7 @@ public class CustomAdapterProductos extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView txtNomProd, txtCantidad, txtValorUni, txtTotal, lbCantidad, lbValorUnitario, lbTotal;
 
-        Producto prod = listaProd.get(position);
+        Productos prod = listaProd.get(position);
 
         //Verificamos si la vista de ese item ya existe, sino la "inflamos" para mostrar. Si está actualizamos sus datos
         if(convertView == null){
