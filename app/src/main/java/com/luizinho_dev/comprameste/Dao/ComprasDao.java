@@ -13,7 +13,7 @@ import java.util.List;
 public interface ComprasDao {
 
     @Insert
-    void createCompra(Compras compra);
+    long createCompra(Compras compra);
 
     @Update
     void updateCompra(Compras compra);
@@ -25,7 +25,7 @@ public interface ComprasDao {
     Compras findUltimaCompra();
 
     @Query("SELECT * FROM Compras WHERE id = :id LIMIT 1")
-    Compras findCompraById(int id);
+    Compras findCompraById(long id);
 
 
 }

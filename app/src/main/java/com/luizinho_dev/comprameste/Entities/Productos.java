@@ -6,6 +6,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.text.MessageFormat;
+
 @Entity(tableName = "Productos",
         foreignKeys = @ForeignKey(
         entity = Compras.class,
@@ -18,7 +20,7 @@ public class Productos {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    public int id;
+    public long id;
 
     @ColumnInfo(name = "nombre")
     public String nombre;
@@ -47,11 +49,11 @@ public class Productos {
         this.idCompra = idCompra;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -93,5 +95,11 @@ public class Productos {
 
     public void setIdCompra(int idCompra) {
         this.idCompra = idCompra;
+    }
+
+    @Override
+    public String toString(){
+        return MessageFormat.format("Id: {4}, Nombre: {0}, Cant: {1}, Valor Uni.: {2}, Total: {3}",
+                this.nombre, this.cantidad, this.valorUnitario, this.total, this.id);
     }
 }

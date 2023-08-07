@@ -14,10 +14,7 @@ import java.util.List;
 public interface ProductosDao {
 
     @Insert
-    void createProducto(Productos producto);
-
-    @Insert
-    void createProductos(Productos...productos);
+    long createProducto(Productos producto);
 
     @Update
     void updateProducto(Productos producto);
@@ -30,7 +27,7 @@ public interface ProductosDao {
     List<Productos> findProductosByIdCompra(int idCompra);
 
     @Query("SELECT * FROM Productos WHERE id = :id LIMIT 1")
-    Productos findProductoById(int id);
+    Productos findProductoById(long id);
 
 
 }

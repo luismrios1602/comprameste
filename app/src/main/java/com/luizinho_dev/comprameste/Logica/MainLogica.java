@@ -109,7 +109,7 @@ public class MainLogica {
         listaProductos = (ArrayList<Productos>) db.productosDao().findProductosByIdCompra(compraActu.getId());
     }
 
-    public Productos buscarProductoById(int idProd){
+    public Productos buscarProductoById(long idProd){
 
         try {
 
@@ -151,10 +151,10 @@ public class MainLogica {
             nombre = (nombre == null) ? "NN" : nombre;
 
             Compras compra = new Compras(fechaFormat, nombre);
-            db.comprasDao().createCompra(compra);
+            long id = db.comprasDao().createCompra(compra);
 
-            //Después de crear la compra vamos a la BD a consultar la ultima compra creada
-            compra = db.comprasDao().findUltimaCompra();
+            //Después de crear la compra vamos a la BD a consultar la compra con el id creado
+            compra = db.comprasDao().findCompraById(id);
             return compra;
 
         } catch (Exception e){
@@ -192,7 +192,7 @@ public class MainLogica {
         }
     }
 
-    public boolean crearProducto(String nombre, int cantidad, double valorUnitario, double total, int idCompra){
+    public Productos crearProducto(String nombre, int cantidad, double valorUnitario, double total, int idCompra){
 
         try{
 
@@ -207,23 +207,24 @@ public class MainLogica {
                     System.out.println("Compra creada: "+ compra.getId());
                 } else {
                     System.err.println("Error al crear la compra principal.");
-                    return false;
+                    return null;
                 }
             }
 
             Productos producto = new Productos(nombre, cantidad, valorUnitario, total, idCompra);
-            db.productosDao().createProducto(producto);
-            System.out.println("Producto "+producto.getNombre()+ " creado exitosamente.");
+            long idProdCreado = db.productosDao().createProducto(producto);
+            producto.setId(idProdCreado);
+            System.out.println("Producto "+ producto + " creado exitosamente.");
 
-            return true;
+            return producto;
         } catch (Exception e){
             System.out.println("Se ha presentado un error creando los productos");
-            return false;
+            return null;
         }
 
     }
 
-    public boolean actualizarProducto(int idProd, String nombre, int cantidad, double valorUnitario, double total, int idCompra){
+    public boolean actualizarProducto(long idProd, String nombre, int cantidad, double valorUnitario, double total, int idCompra){
         try {
 
             Productos prod = buscarProductoById(idProd);
@@ -247,7 +248,7 @@ public class MainLogica {
 
     }
 
-    public boolean eliminarProducto(int idProd){
+    public boolean eliminarProducto(long idProd){
 
         try {
 

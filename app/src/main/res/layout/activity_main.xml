@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="com.luizinho_dev.comprameste.Activities.MainActivity">
 
     <ScrollView
@@ -34,42 +34,44 @@
                 android:textColor="#000"
                 android:textStyle="bold"
                 app:fontFamily="sans-serif" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btnNuevaCompra"
-                    app:cornerRadius="50sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp"
-                    android:textSize="12sp"
-                    app:iconSize="14sp"
                     android:text="@string/boton_nueva_compra"
+                    android:textSize="12sp"
+                    app:cornerRadius="50sp"
                     app:icon="@drawable/ic_action_name"
-                    android:layout_gravity="center"/>
+                    app:iconSize="14sp" />
 
                 <Button
                     android:id="@+id/btnHistorial"
-                    app:cornerRadius="50sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:text="@string/boton_historial"
-                    app:backgroundTint="@color/gray"
                     android:textSize="12sp"
-                    app:iconSize="14sp"
+                    app:backgroundTint="@color/gray"
+                    app:cornerRadius="50sp"
                     app:icon="?attr/actionModePasteDrawable"
-                    android:layout_gravity="center"/>
+                    app:iconSize="14sp" />
 
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <EditText
@@ -78,25 +80,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:autofillHints="true"
-                    android:textSize="16sp"
-                    android:textAlignment="center"
+                    android:gravity="center_horizontal"
                     android:hint="@string/lb_nombre_compra"
                     android:inputType="textCapSentences"
-                    tools:ignore="LabelFor"
-                    android:gravity="center_horizontal" />
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    tools:ignore="LabelFor" />
 
                 <Button
                     android:id="@+id/btnDuplicarCompra"
-                    app:cornerRadius="50sp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:text="@string/boton_duplicar_compra"
                     android:textSize="12sp"
-                    app:iconSize="14sp"
+                    app:cornerRadius="50sp"
                     app:icon="?attr/actionModeCopyDrawable"
-                    android:layout_gravity="center"/>
+                    app:iconSize="14sp" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -261,10 +264,10 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/boton_cancelar"
                     android:layout_marginEnd="15dp"
-                    app:icon="@drawable/ic_icon_cancel"
-                    android:layout_marginRight="15dp" />
+                    android:layout_marginRight="15dp"
+                    android:text="@string/boton_cancelar"
+                    app:icon="@drawable/ic_icon_cancel" />
 
                 <Button
                     android:id="@+id/btnAgregar"
@@ -274,6 +277,7 @@
                     app:backgroundTint="@color/green_crack"
                     app:icon="@drawable/ic_launcher_add" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -285,34 +289,49 @@
                     android:id="@+id/lbListaProductos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lb_lista_productos"
                     android:gravity="center"
-                    android:textStyle="bold"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+                    android:text="@string/lb_lista_productos"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Button"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/lbInfoListaProductos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lb_info_lista_productos"
                     android:gravity="center"
-                    android:textStyle="italic"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    android:text="@string/lb_info_lista_productos"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textStyle="italic" />
             </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvProductos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <ListView
                 android:id="@+id/lvProductos"
                 android:layout_width="match_parent"
-                android:layout_height="2000dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
                 android:baselineAligned="false"
-                tools:ignore="ExtraText,NestedScrolling">
+                tools:ignore="ExtraText,NestedScrolling" />
 
-            </ListView>
+        </LinearLayout>
+
+
+
 
         </LinearLayout>
     </ScrollView>

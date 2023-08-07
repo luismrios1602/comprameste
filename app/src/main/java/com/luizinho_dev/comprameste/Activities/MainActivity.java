@@ -1,6 +1,8 @@
 package com.luizinho_dev.comprameste.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -16,7 +18,9 @@ import android.widget.Toast;
 
 import com.example.comprameste.R;
 import com.luizinho_dev.comprameste.CustomAdapters.CustomAdapterProductos;
+import com.luizinho_dev.comprameste.CustomAdapters.RVAdapterProductos;
 import com.luizinho_dev.comprameste.Entities.Compras;
+import com.luizinho_dev.comprameste.Entities.Productos;
 import com.luizinho_dev.comprameste.Logica.MainLogica;
 import java.text.DecimalFormat;
 
@@ -28,8 +32,10 @@ public class MainActivity extends AppCompatActivity {
     TextView txtTotalFinal, txtTotal;
     Button btnAgregar, btnCancelar, btnNuevaCompra, btnHistorial, btnDuplicarCompra;
     ListView lvProductos;
+    RecyclerView rvProductos;
 
-    int lbId = 0;
+
+    long lbId = 0;
     double totalFinal = 0.0;
 
     long exitTime = System.currentTimeMillis();
@@ -37,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     DecimalFormat formatea = new DecimalFormat("###,###.##");
 
     CustomAdapterProductos adapter;
+    RVAdapterProductos rvadapter;
 
     Bundle bundle;
     MainLogica mainLogica = new MainLogica();
@@ -57,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
         cargarInfoUltimaCompra();
 
         //Usamos el objeto de Logica para usar su lista de productos y cargar el listview a la primera
-        actualizarAdapter();
+//        actualizarAdapter();
+        //Iniciamos el recyclerview con los datos encontrados
+        actualizarRecyclerView();
 
         //Llamamos el bundle por si venimos desde la actividad Historial
         bundle = getIntent().getExtras();
@@ -94,137 +103,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * @description Método para validar que los datos en el formulario de producto sean correctos para poder guardar
-     * @return true / false
-     */
-    public boolean validar(){
-        try {
-            //Validamos primero el nombre y así nos ahorramos validar el resto si el nombre está vacío
-            String nombre = txtProducto.getText().toString();
-            if (nombre.isEmpty()) return false;
-
-            //Validamos si la cantidad está vacía y la seteamos por defecto a 1 (Para evitar escribirla)
-            String cantString = txtCantidad.getText().toString();
-            if (cantString.equals("")) txtCantidad.setText("1");
-
-            //Validamos si el valor unitario está vacío y lo seteamos por defecto a 0 (Para evitar escribirla)
-            String valUniString = txtValorUni.getText().toString();
-            if (valUniString.equals("")) txtValorUni.setText("0");
-
-            int cant = Integer.parseInt(txtCantidad.getText().toString());
-            double valUni = Double.parseDouble(txtValorUni.getText().toString());
-
-            return !nombre.isEmpty() && cant >= 0 && valUni >= 0; //Si no cumple con las validaciones, directamente retornamos false y si sí, pues true :v
-
-        } catch (Exception e) {
-            System.out.println(""+e);
-            return false;
-        }
-
-    }
-
-    /** @description Método para validar los valores de cantidad y valor unitario antes de calcular total unitario */
-    public boolean validarValores(){
-        try {
-
-            int cant = Integer.parseInt(txtCantidad.getText().toString());
-            System.err.println("cantiadd: |"+cant+"|");
-            double valUni = Double.parseDouble(txtValorUni.getText().toString());
-
-            return cant >= 0 && valUni >= 0; //Si los valores no son mayores a 0 que retorne false
-
-
-        } catch (Exception e){
-            return false;
-        }
-    }
-
-    public Double calcularTotalUnd(int cant, Double valorUni){
-        return cant * valorUni;
-    }
-
-    public void limpiarCampos(){
-
-        lbId = 0;
-        txtProducto.setText("");
-        txtCantidad.setText("");
-        txtValorUni.setText("");
-        txtTotal.setText("0");
-    }
-
-    @SuppressLint("SetTextI18n")
-    public void calcularTotalFinal(){
-        //Actualizamos la lista de productos del front
-        mainLogica.cargarProductosByCompra(mainLogica.compraActu.getId());
-
-        double total = 0.0;
-        for (int i = 0; i< mainLogica.listaProductos.size(); i++){
-            total += mainLogica.listaProductos.get(i).getTotal();
-        }
-
-        totalFinal = total;
-        txtTotalFinal.setText("$"+formatea.format(total));
-        //Actualizamos la compra actual cada vez que se calcule el totalFinal
-        mainLogica.actualizarCompra(mainLogica.compraActu.getId(), mainLogica.listaProductos.size(), totalFinal, mainLogica.compraActu.getNombre());
-
-    }
-
-    public void crearProducto(){
-
-        boolean prodCreado = mainLogica.crearProducto(txtProducto.getText().toString(),
-                Integer.parseInt(txtCantidad.getText().toString()),
-                Double.parseDouble(txtValorUni.getText().toString()),
-                Double.parseDouble(txtTotal.getText().toString()),
-                mainLogica.compraActu.getId());
-
-        //Si se creó el producto exitosamente
-        if (prodCreado){
-
-            mainLogica.cargarProductosByCompra(mainLogica.compraActu.getId());
-            actualizarAdapter();
-            lbId = 0;
-            Toast.makeText(getApplicationContext(), "Producto creado exitosamente.", Toast.LENGTH_LONG).show();
-
-        } else {
-            Toast.makeText(getApplicationContext(), "ERROR: No se pudo crear el Producto.", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void actualizarProducto(int idProd){
-        String nombre = txtProducto.getText().toString();
-        int cantidad = Integer.parseInt(txtCantidad.getText().toString());
-        double valorUnitario = Double.parseDouble(txtValorUni.getText().toString());
-        double total = Double.parseDouble(txtTotal.getText().toString());
-
-        boolean prodActualizado = mainLogica.actualizarProducto(idProd, nombre, cantidad, valorUnitario, total, mainLogica.compraActu.getId());
-
-        if (prodActualizado){
-            //Si se actualizó correctamente tenemos que actualizar el adapter
-            mainLogica.cargarProductosCompraActual();
-            actualizarAdapter();
-            Toast.makeText(getApplicationContext(), "Producto editado exitosamente.",Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "ERROR: No se pudo editar el Producto", Toast.LENGTH_LONG).show();
-        }
-
-    }
-
-    public void actualizarAdapter(){
-        adapter= new CustomAdapterProductos(getApplicationContext(), mainLogica.listaProductos);
-        lvProductos.setAdapter(adapter);
-    }
-
-    public void cargarInfoUltimaCompra(){
-        mainLogica.cargarUltimaCompra();
-        txtNombreCompra.setText(mainLogica.compraActu.getNombre());
-
-        System.out.println("totalCompra: "+mainLogica.compraActu.getTotal());
-        txtTotalFinal.setText("$"+formatea.format(mainLogica.compraActu.getTotal()));
-
-
-    }
-
-    /**
      * @description Método para cargar todos los elementos del XML al java para manipularlos
      */
     private void cargarElementos(){
@@ -246,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         btnHistorial = findViewById(R.id.btnHistorial);
         btnDuplicarCompra = findViewById(R.id.btnDuplicarCompra);
         lvProductos = findViewById(R.id.lvProductos);
+        rvProductos = findViewById(R.id.rvProductos);
     }
 
     /**
@@ -272,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Campos vacíos" , Toast.LENGTH_SHORT).show();
             }
 
-            adapter.notifyDataSetChanged();
+//            adapter.notifyDataSetChanged();
         });
         //endregion
 
@@ -289,7 +168,8 @@ public class MainActivity extends AppCompatActivity {
             btnDuplicarCompra.setEnabled(false);
             mainLogica.compraActu.setId(0);
             mainLogica.listaProductos.clear();
-            actualizarAdapter();
+//            actualizarAdapter();
+            actualizarRecyclerView();
 
         });
 
@@ -490,6 +370,143 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * @description Método para validar que los datos en el formulario de producto sean correctos para poder guardar
+     * @return true / false
+     */
+    public boolean validar(){
+        try {
+            //Validamos primero el nombre y así nos ahorramos validar el resto si el nombre está vacío
+            String nombre = txtProducto.getText().toString();
+            if (nombre.isEmpty()) return false;
+
+            //Validamos si la cantidad está vacía y la seteamos por defecto a 1 (Para evitar escribirla)
+            String cantString = txtCantidad.getText().toString();
+            if (cantString.equals("")) txtCantidad.setText("1");
+
+            //Validamos si el valor unitario está vacío y lo seteamos por defecto a 0 (Para evitar escribirla)
+            String valUniString = txtValorUni.getText().toString();
+            if (valUniString.equals("")) txtValorUni.setText("0");
+
+            int cant = Integer.parseInt(txtCantidad.getText().toString());
+            double valUni = Double.parseDouble(txtValorUni.getText().toString());
+
+            return !nombre.isEmpty() && cant >= 0 && valUni >= 0; //Si no cumple con las validaciones, directamente retornamos false y si sí, pues true :v
+
+        } catch (Exception e) {
+            System.out.println(""+e);
+            return false;
+        }
+
+    }
+
+    /** @description Método para validar los valores de cantidad y valor unitario antes de calcular total unitario */
+    public boolean validarValores(){
+        try {
+
+            int cant = Integer.parseInt(txtCantidad.getText().toString());
+            System.err.println("cantiadd: |"+cant+"|");
+            double valUni = Double.parseDouble(txtValorUni.getText().toString());
+
+            return cant >= 0 && valUni >= 0; //Si los valores no son mayores a 0 que retorne false
+
+
+        } catch (Exception e){
+            return false;
+        }
+    }
+
+    public Double calcularTotalUnd(int cant, Double valorUni){
+        return cant * valorUni;
+    }
+
+    public void limpiarCampos(){
+
+        lbId = 0;
+        txtProducto.setText("");
+        txtCantidad.setText("");
+        txtValorUni.setText("");
+        txtTotal.setText("0");
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void calcularTotalFinal(){
+        //Actualizamos la lista de productos del front
+        mainLogica.cargarProductosByCompra(mainLogica.compraActu.getId());
+
+        double total = 0.0;
+        for (int i = 0; i< mainLogica.listaProductos.size(); i++){
+            total += mainLogica.listaProductos.get(i).getTotal();
+        }
+
+        totalFinal = total;
+        txtTotalFinal.setText("$"+formatea.format(total));
+        //Actualizamos la compra actual cada vez que se calcule el totalFinal
+        mainLogica.actualizarCompra(mainLogica.compraActu.getId(), mainLogica.listaProductos.size(), totalFinal, mainLogica.compraActu.getNombre());
+
+    }
+
+    public void crearProducto(){
+
+        Productos prodCreado = mainLogica.crearProducto(txtProducto.getText().toString(),
+                Integer.parseInt(txtCantidad.getText().toString()),
+                Double.parseDouble(txtValorUni.getText().toString()),
+                Double.parseDouble(txtTotal.getText().toString()),
+                mainLogica.compraActu.getId());
+
+        //Si se creó el producto exitosamente
+        if (prodCreado != null){
+            mainLogica.cargarProductosCompraActual();
+            actualizarRecyclerView();
+            lbId = 0;
+            Toast.makeText(getApplicationContext(), "Producto creado exitosamente.", Toast.LENGTH_LONG).show();
+
+        } else {
+            Toast.makeText(getApplicationContext(), "ERROR: No se pudo crear el Producto.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void actualizarProducto(long idProd){
+        String nombre = txtProducto.getText().toString();
+        int cantidad = Integer.parseInt(txtCantidad.getText().toString());
+        double valorUnitario = Double.parseDouble(txtValorUni.getText().toString());
+        double total = Double.parseDouble(txtTotal.getText().toString());
+
+        boolean prodActualizado = mainLogica.actualizarProducto(idProd, nombre, cantidad, valorUnitario, total, mainLogica.compraActu.getId());
+
+        if (prodActualizado){
+            //Si se actualizó correctamente tenemos que actualizar el adapter
+            mainLogica.cargarProductosCompraActual();
+            actualizarAdapter();
+            Toast.makeText(getApplicationContext(), "Producto editado exitosamente.",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "ERROR: No se pudo editar el Producto", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    public void actualizarAdapter(){
+        adapter= new CustomAdapterProductos(getApplicationContext(), mainLogica.listaProductos);
+        lvProductos.setAdapter(adapter);
+    }
+
+    public void actualizarRecyclerView(){
+        rvProductos.setLayoutManager(new LinearLayoutManager(this));
+        rvadapter = new RVAdapterProductos(mainLogica.listaProductos);
+        rvProductos.setAdapter(rvadapter);
+    }
+
+    public void cargarInfoUltimaCompra(){
+        mainLogica.cargarUltimaCompra();
+        txtNombreCompra.setText(mainLogica.compraActu.getNombre());
+
+        System.out.println("totalCompra: "+mainLogica.compraActu.getTotal());
+        txtTotalFinal.setText("$"+formatea.format(mainLogica.compraActu.getTotal()));
+
+
+    }
+
 
 
 
