@@ -1,6 +1,8 @@
 package com.luizinho_dev.comprameste.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,16 +28,19 @@ import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity {
 
-
-//    ScrollView miScrollView;
-    EditText txtProducto,txtCantidad, txtValorUni, txtNombreCompra;
-    TextView txtTotalFinal, txtTotal;
+    static EditText txtProducto;
+    static EditText txtCantidad;
+    static EditText txtValorUni;
+    EditText txtNombreCompra;
+    TextView txtTotalFinal;
+    static TextView txtTotal;
     Button btnAgregar, btnCancelar, btnNuevaCompra, btnHistorial, btnDuplicarCompra;
+    static NestedScrollView nestedScroll;
     ListView lvProductos;
     RecyclerView rvProductos;
 
 
-    long lbId = 0;
+    public static long lbId = 0;
     double totalFinal = 0.0;
 
     long exitTime = System.currentTimeMillis();
@@ -43,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     DecimalFormat formatea = new DecimalFormat("###,###.##");
 
     CustomAdapterProductos adapter;
-    RVAdapterProductos rvadapter;
+    static RVAdapterProductos rvadapter;
 
     Bundle bundle;
     MainLogica mainLogica = new MainLogica();
@@ -63,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
         //Cargamos la informacion de la ultima compra y seteamos los valores de nombre y total
         cargarInfoUltimaCompra();
 
-        //Usamos el objeto de Logica para usar su lista de productos y cargar el listview a la primera
-//        actualizarAdapter();
         //Iniciamos el recyclerview con los datos encontrados
         actualizarRecyclerView();
 
@@ -108,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
     private void cargarElementos(){
 
         //Llamamos todos los objetos del front que vamos a utilizar
-//        miScrollView = findViewById(R.id.miScrollView);
         txtNombreCompra = findViewById(R.id.txtNombreCompra);
         txtProducto = findViewById(R.id.txtProducto);
         txtCantidad = findViewById(R.id.txtCantidad);
@@ -118,11 +120,11 @@ public class MainActivity extends AppCompatActivity {
         txtTotal = findViewById(R.id.txtTotal);
         txtTotalFinal = findViewById(R.id.txtTotalFinal);
         btnAgregar = findViewById(R.id.btnAgregar);
-//        btnCalcular = findViewById(R.id.btnCalcular);
         btnCancelar = findViewById(R.id.btnCancelar);
         btnNuevaCompra = findViewById(R.id.btnNuevaCompra);
         btnHistorial = findViewById(R.id.btnHistorial);
         btnDuplicarCompra = findViewById(R.id.btnDuplicarCompra);
+        nestedScroll = findViewById(R.id.nestedScroll);
         lvProductos = findViewById(R.id.lvProductos);
         rvProductos = findViewById(R.id.rvProductos);
     }
@@ -156,7 +158,10 @@ public class MainActivity extends AppCompatActivity {
         //endregion
 
         //region Button btnCancelar
-        btnCancelar.setOnClickListener(v -> limpiarCampos());
+        btnCancelar.setOnClickListener(v -> {
+            limpiarCampos();
+            actualizarRecyclerView();
+        });
         //endregion
 
         //region Button btnNuevaCompra
@@ -168,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
             btnDuplicarCompra.setEnabled(false);
             mainLogica.compraActu.setId(0);
             mainLogica.listaProductos.clear();
-//            actualizarAdapter();
             actualizarRecyclerView();
 
         });
@@ -316,21 +320,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        lvProductos.setOnItemClickListener((parent, view, position, id) -> {
-            lbId = mainLogica.listaProductos.get(position).getId();
-            txtProducto.setText(mainLogica.listaProductos.get(position).getNombre());
-            txtCantidad.setText(String.valueOf(mainLogica.listaProductos.get(position).getCantidad()));
-            txtValorUni.setText(String.valueOf(mainLogica.listaProductos.get(position).getValorUnitario()));
-            //txtTotal.setText(String.valueOf(listaProductos.get(position).getTotal()));
-            txtProducto.requestFocusFromTouch();
-        });
-
-        //Método para realizar scroll del listview dentro del scroll original
-        lvProductos.setOnTouchListener((v, event) -> {
-            v.getParent().requestDisallowInterceptTouchEvent(true);
-            return false;
-        });
-
         //Deslizar item para borrarlo
         /*SwipeListViewTouchListener touchListener =new SwipeListViewTouchListener(lvProductos,new SwipeListViewTouchListener.OnSwipeCallback() {
             @Override
@@ -354,17 +343,6 @@ public class MainActivity extends AppCompatActivity {
         //Escuchadores del listView
         lvProductos.setOnTouchListener(touchListener);
         lvProductos.setOnScrollListener(touchListener.makeScrollListener());*/
-
-        //endregion
-
-        //region ScrollView miScrollView
-
-//        //Método para realizar scroll del listview dentro del scroll original
-//        miScrollView.setOnTouchListener((v, event) -> {
-//            findViewById(R.id.lvProductos).getParent()
-//                    .requestDisallowInterceptTouchEvent(false);
-//            return false;
-//        });
 
         //endregion
 
@@ -478,7 +456,8 @@ public class MainActivity extends AppCompatActivity {
         if (prodActualizado){
             //Si se actualizó correctamente tenemos que actualizar el adapter
             mainLogica.cargarProductosCompraActual();
-            actualizarAdapter();
+            actualizarRecyclerView();
+
             Toast.makeText(getApplicationContext(), "Producto editado exitosamente.",Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getApplicationContext(), "ERROR: No se pudo editar el Producto", Toast.LENGTH_LONG).show();
@@ -495,8 +474,10 @@ public class MainActivity extends AppCompatActivity {
         rvProductos.setLayoutManager(new LinearLayoutManager(this));
         rvadapter = new RVAdapterProductos(mainLogica.listaProductos);
         rvProductos.setAdapter(rvadapter);
-    }
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(rvadapter.itemTouchHelperCallback);
+        itemTouchHelper.attachToRecyclerView(rvProductos);
 
+    }
     public void cargarInfoUltimaCompra(){
         mainLogica.cargarUltimaCompra();
         txtNombreCompra.setText(mainLogica.compraActu.getNombre());
@@ -505,6 +486,24 @@ public class MainActivity extends AppCompatActivity {
         txtTotalFinal.setText("$"+formatea.format(mainLogica.compraActu.getTotal()));
 
 
+    }
+
+    /**
+     * @description Método utilizado por el Adapter para cargar desde allá los valores del producto a editar
+     * @param prodEdit
+     */
+    public static void editarProducto(Productos prodEdit){
+        System.out.println(prodEdit);
+        //Cargamos los datos del producto seleccionado (Todos los campos se vuelven static por el metodo)
+        lbId = prodEdit.getId();
+        txtProducto.setText(prodEdit.getNombre());
+        txtCantidad.setText(String.valueOf(prodEdit.getCantidad()));
+        txtValorUni.setText(String.valueOf(prodEdit.getValorUnitario()));
+        txtTotal.setText(String.valueOf(prodEdit.getTotal()));
+        txtProducto.requestFocusFromTouch();
+        //Le notificamos al adapter que tuvo un cambio (En realidad es para que me vuelva a mostrar el elemento porque lo borra :v)
+        rvadapter.notifyDataSetChanged();
+        nestedScroll.scrollTo(-20,-20);
     }
 
 

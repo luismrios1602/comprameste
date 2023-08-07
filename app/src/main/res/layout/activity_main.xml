@@ -498,7 +498,7 @@
 
                     <TextView
                         android:id="@+id/lbValorUni"
-                        android:layout_width="210dp"
+                        android:layout_width="165dp"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:text="@string/cabecera_valor_unitario" />
@@ -528,12 +528,12 @@
 
                     <EditText
                         android:id="@+id/txtValorUnitario"
-                        android:layout_width="wrap_content"
+                        android:layout_width="165dp"
                         android:layout_height="wrap_content"
                         android:autofillHints="true"
                         android:ems="10"
                         android:hint="0"
-                        android:inputType="numberDecimal"/>
+                        android:inputType="numberDecimal" />
 
                     <TextView
                         android:id="@+id/txtTotal"
@@ -636,6 +636,7 @@
 
     <!-- Scroll principal con RecyclerView -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">

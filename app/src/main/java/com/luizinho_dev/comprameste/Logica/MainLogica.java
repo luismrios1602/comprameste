@@ -49,7 +49,11 @@ public class MainLogica {
             Compras ultCompra = db.comprasDao().findUltimaCompra();
 
             //Si no hay ultima compra el resultado es null, por tanto si hay un objeto, buscamos los productos de dicha compra
-            if (ultCompra != null) listaProductos = (ArrayList<Productos>) db.productosDao().findProductosByIdCompra(ultCompra.getId());
+            if (ultCompra != null)  {
+                listaProductos.clear();
+                ArrayList<Productos> productos = (ArrayList<Productos>) db.productosDao().findProductosByIdCompra(ultCompra.getId());
+                listaProductos.addAll(productos);
+            }
             //Si está null entonces mandamos una compra nueva (con 0)
             else ultCompra = new Compras(0);
 
@@ -102,11 +106,15 @@ public class MainLogica {
     }
 
     public void cargarProductosByCompra(int idCompra){
-        listaProductos = (ArrayList<Productos>) db.productosDao().findProductosByIdCompra(idCompra);
+        listaProductos.clear();
+        ArrayList<Productos> productos = (ArrayList<Productos>) db.productosDao().findProductosByIdCompra(idCompra);
+        listaProductos.addAll(productos);
     }
 
     public void cargarProductosCompraActual(){
-        listaProductos = (ArrayList<Productos>) db.productosDao().findProductosByIdCompra(compraActu.getId());
+        listaProductos.clear();
+        ArrayList<Productos> productos = (ArrayList<Productos>) db.productosDao().findProductosByIdCompra(compraActu.getId());
+        listaProductos.addAll(productos);
     }
 
     public Productos buscarProductoById(long idProd){
@@ -236,6 +244,7 @@ public class MainLogica {
                 prod.setIdCompra(idCompra);
 
                 db.productosDao().updateProducto(prod);
+                System.out.println("Producto actualizado!");
                 return true;
             } else {
                 return false;
