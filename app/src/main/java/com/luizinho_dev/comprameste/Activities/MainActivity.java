@@ -27,7 +27,7 @@ import java.text.DecimalFormat;
 public class MainActivity extends AppCompatActivity {
 
 
-    ScrollView miScrollView;
+//    ScrollView miScrollView;
     EditText txtProducto,txtCantidad, txtValorUni, txtNombreCompra;
     TextView txtTotalFinal, txtTotal;
     Button btnAgregar, btnCancelar, btnNuevaCompra, btnHistorial, btnDuplicarCompra;
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     private void cargarElementos(){
 
         //Llamamos todos los objetos del front que vamos a utilizar
-        miScrollView = findViewById(R.id.miScrollView);
+//        miScrollView = findViewById(R.id.miScrollView);
         txtNombreCompra = findViewById(R.id.txtNombreCompra);
         txtProducto = findViewById(R.id.txtProducto);
         txtCantidad = findViewById(R.id.txtCantidad);
@@ -359,12 +359,12 @@ public class MainActivity extends AppCompatActivity {
 
         //region ScrollView miScrollView
 
-        //Método para realizar scroll del listview dentro del scroll original
-        miScrollView.setOnTouchListener((v, event) -> {
-            findViewById(R.id.lvProductos).getParent()
-                    .requestDisallowInterceptTouchEvent(false);
-            return false;
-        });
+//        //Método para realizar scroll del listview dentro del scroll original
+//        miScrollView.setOnTouchListener((v, event) -> {
+//            findViewById(R.id.lvProductos).getParent()
+//                    .requestDisallowInterceptTouchEvent(false);
+//            return false;
+//        });
 
         //endregion
 

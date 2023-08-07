@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -200,7 +201,7 @@
                     android:inputType="numberDecimal"
                     tools:ignore="LabelFor" />
 
-                <!-- <EditText
+                &lt;!&ndash; <EditText
                     android:id="@+id/txtTotal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -208,7 +209,7 @@
                     android:ems="10"
                     android:enabled="false"
                     android:inputType="numberDecimal"
-                    tools:ignore="LabelFor" /> -->
+                    tools:ignore="LabelFor" /> &ndash;&gt;
 
                 <TextView
                     android:id="@+id/textView2"
@@ -249,7 +250,7 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <!--<Button
+                &lt;!&ndash;<Button
                     android:id="@+id/btnCalcular"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
@@ -257,7 +258,7 @@
                     android:text="@string/boton_calcular"
                     android:layout_marginEnd="15dp"
                     app:icon="@drawable/ic_launcher_calculate"
-                    android:layout_marginRight="15dp" />-->
+                    android:layout_marginRight="15dp" />&ndash;&gt;
 
                 <Button
                     android:id="@+id/btnCancelar"
@@ -336,4 +337,325 @@
         </LinearLayout>
     </ScrollView>
 
-</RelativeLayout>
+</RelativeLayout>-->
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <!-- Encabezado del formulario -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:background="@android:color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/lbTitulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/app_titulo"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    app:fontFamily="sans-serif" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnNuevaCompra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/boton_nueva_compra"
+                        android:textSize="12sp"
+                        app:cornerRadius="50sp"
+                        app:icon="@drawable/ic_action_name"
+                        app:iconSize="14sp" />
+
+                    <Button
+                        android:id="@+id/btnHistorial"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/boton_historial"
+                        android:textSize="12sp"
+                        app:backgroundTint="@color/gray"
+                        app:cornerRadius="50sp"
+                        app:icon="?attr/actionModePasteDrawable"
+                        app:iconSize="14sp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/txtNombreCompra"
+                        style="@style/Widget.AppCompat.EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:autofillHints="true"
+                        android:gravity="center_horizontal"
+                        android:hint="@string/lb_nombre_compra"
+                        android:inputType="textCapSentences"
+                        android:textAlignment="center"
+                        android:textSize="16sp"/>
+
+                    <Button
+                        android:id="@+id/btnDuplicarCompra"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:text="@string/boton_duplicar_compra"
+                        android:textSize="12sp"
+                        app:cornerRadius="50sp"
+                        app:icon="?attr/actionModeCopyDrawable"
+                        app:iconSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/lbTotalFinal"
+                        android:layout_width="90dp"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:text="@string/total_final"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                    <TextView
+                        android:id="@+id/txtTotalFinal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:text="@string/total_final_inicial"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lbProducto"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:text="@string/cabecera_producto" />
+
+                    <EditText
+                        android:id="@+id/txtProducto"
+                        style="@style/Widget.AppCompat.EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:autofillHints="true"
+                        android:ems="10"
+                        android:inputType="textCapSentences"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/lbCantidad"
+                        android:layout_width="53dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="@string/cabecera_cantidad" />
+
+                    <TextView
+                        android:id="@+id/lbValorUni"
+                        android:layout_width="210dp"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="@string/cabecera_valor_unitario" />
+
+                    <TextView
+                        android:id="@+id/lbTotal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="@string/cabecera_total"
+                        app:autoSizeTextType="uniform" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/txtCantidad"
+                        android:layout_width="53dp"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="yes"
+                        android:ems="10"
+                        android:hint="1"
+                        android:inputType="number"/>
+
+                    <EditText
+                        android:id="@+id/txtValorUnitario"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="true"
+                        android:ems="10"
+                        android:hint="0"
+                        android:inputType="numberDecimal"/>
+
+                    <TextView
+                        android:id="@+id/txtTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0sp"
+                        android:layout_marginStart="2sp"
+                        android:layout_marginLeft="2sp"
+                        android:layout_marginEnd="2sp"
+                        android:layout_marginRight="2sp"
+                        android:layout_weight="1"
+                        android:enabled="false"
+                        android:text="@string/total_final_inicial"
+                        android:textColor="@color/gray"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnCancelar"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginRight="15dp"
+                        android:text="@string/boton_cancelar"
+                        app:icon="@drawable/ic_icon_cancel" />
+
+                    <Button
+                        android:id="@+id/btnAgregar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/boton_agregar"
+                        app:backgroundTint="@color/green_crack"
+                        app:icon="@drawable/ic_launcher_add" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lbListaProductos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/lb_lista_productos"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/lbInfoListaProductos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/lb_info_lista_productos"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textStyle="italic" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ListView
+                        android:id="@+id/lvProductos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginRight="24dp"
+                        android:baselineAligned="false"/>
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Scroll principal con RecyclerView -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- Contenido del NestedScrollView, incluido el RecyclerView -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Puedes agregar más vistas aquí -->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvProductos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- Puedes agregar más vistas aquí -->
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
