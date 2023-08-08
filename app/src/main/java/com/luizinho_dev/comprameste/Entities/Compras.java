@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.text.MessageFormat;
+
 @Entity(tableName = "Compras")
 public class Compras {
     @PrimaryKey(autoGenerate = true)
@@ -80,5 +82,11 @@ public class Compras {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    @Override
+    public String toString(){
+        return MessageFormat.format("Id: {0}, Nombre: {1}, Cant. Prod.: {2}, Total: {3}",
+                this.id, this.nombre, this.cantProductos, this.total);
     }
 }

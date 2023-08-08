@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -81,4 +82,97 @@
         </LinearLayout>
 
     </ScrollView>
-</RelativeLayout>
+</RelativeLayout>-->
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <!-- Encabezado del formulario -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayoutCompras"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbarCompras"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:background="?attr/collapsedTitleTextAppearance">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/lbTituloCompras"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/cabecera_compras_realizadas"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_launcher_shop_foreground"
+                    app:fontFamily="sans-serif" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lbListaCompras"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lb_lista_compras"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+
+                    <TextView
+                        android:id="@+id/lbInfoListaProductos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lb_info_lista_compras"
+                        android:gravity="center"
+                        android:textStyle="italic"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Scroll principal con RecyclerView -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollCompras"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- Contenido del NestedScrollView, incluido el RecyclerView -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Puedes agregar más vistas aquí -->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCompras"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- Puedes agregar más vistas aquí -->
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

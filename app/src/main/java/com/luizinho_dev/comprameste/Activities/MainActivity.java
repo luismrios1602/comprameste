@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     static TextView txtTotal;
     Button btnAgregar, btnCancelar, btnNuevaCompra, btnHistorial, btnDuplicarCompra;
     static NestedScrollView nestedScroll;
-    ListView lvProductos;
     RecyclerView rvProductos;
 
 
@@ -47,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
     DecimalFormat formatea = new DecimalFormat("###,###.##");
 
-    CustomAdapterProductos adapter;
     static RVAdapterProductos rvadapter;
 
     Bundle bundle;
@@ -125,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
         btnHistorial = findViewById(R.id.btnHistorial);
         btnDuplicarCompra = findViewById(R.id.btnDuplicarCompra);
         nestedScroll = findViewById(R.id.nestedScroll);
-        lvProductos = findViewById(R.id.lvProductos);
         rvProductos = findViewById(R.id.rvProductos);
     }
 
@@ -153,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Campos vacíos" , Toast.LENGTH_SHORT).show();
             }
 
-//            adapter.notifyDataSetChanged();
         });
         //endregion
 
@@ -173,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
             btnDuplicarCompra.setEnabled(false);
             mainLogica.compraActu.setId(0);
             mainLogica.listaProductos.clear();
+            rvadapter.notifyDataSetChanged();
             actualizarRecyclerView();
 
         });
@@ -214,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     mainLogica.cargarProductosByCompra(idCompra);
+                    actualizarRecyclerView();
                     Toast.makeText(getApplicationContext(),"Compra duplicada exitosamente." , Toast.LENGTH_LONG).show();
 
                 } else {
@@ -292,58 +290,6 @@ public class MainActivity extends AppCompatActivity {
                 // Este método se llama después de que el texto cambie.
             }
         });
-        //endregion
-
-        //region ListView lvProductos
-        lvProductos.setOnItemLongClickListener((parent, view, position, id) -> {
-
-            //Eliminamos el producto de la base de datos
-            boolean prodElim = mainLogica.eliminarProducto(mainLogica.listaProductos.get(position).getId());
-
-            if (prodElim) {
-
-                //Si se eliminó correctamente, lo eliminamos del array
-                mainLogica.listaProductos.remove(position);
-                actualizarAdapter();
-
-                Toast.makeText(getApplicationContext(), "Producto eliminado exitosamente.", Toast.LENGTH_LONG).show();
-
-                //Calculamos el total de la compra y actualizamos los datos de esta
-                calcularTotalFinal();
-                mainLogica.actualizarCompra(mainLogica.compraActu.getId(), mainLogica.listaProductos.size(), totalFinal, txtNombreCompra.getText().toString());
-
-            } else {
-                Toast.makeText(getApplicationContext(),"ERROR: No se pudo eliminar el registro",Toast.LENGTH_LONG).show();
-
-            }
-
-            return true;
-        });
-
-        //Deslizar item para borrarlo
-        /*SwipeListViewTouchListener touchListener =new SwipeListViewTouchListener(lvProductos,new SwipeListViewTouchListener.OnSwipeCallback() {
-            @Override
-            public void onSwipeLeft(ListView listView, int [] reverseSortedPositions) {
-                //Aqui ponemos lo que hara el programa cuando deslizamos un item ha la izquierda
-                eliminarProducto(reverseSortedPositions[0], listView.getChildAt(reverseSortedPositions[0]));
-                adapter.notifyDataSetChanged();
-                calcularTotalFinal();
-            }
-
-            @Override
-            public void onSwipeRight(ListView listView, int [] reverseSortedPositions) {
-                //Aqui ponemos lo que hara el programa cuando deslizamos un item ha la derecha
-                eliminarProducto(reverseSortedPositions[0], listView.getChildAt(reverseSortedPositions[0]));
-               adapter.notifyDataSetChanged();
-               calcularTotalFinal();
-
-            }
-        },true, false);
-
-        //Escuchadores del listView
-        lvProductos.setOnTouchListener(touchListener);
-        lvProductos.setOnScrollListener(touchListener.makeScrollListener());*/
-
         //endregion
 
 
@@ -465,10 +411,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void actualizarAdapter(){
-        adapter= new CustomAdapterProductos(getApplicationContext(), mainLogica.listaProductos);
-        lvProductos.setAdapter(adapter);
-    }
+//    public void actualizarAdapter(){
+//        adapter= new CustomAdapterProductos(getApplicationContext(), mainLogica.listaProductos);
+//        lvProductos.setAdapter(adapter);
+//    }
 
     public void actualizarRecyclerView(){
         rvProductos.setLayoutManager(new LinearLayoutManager(this));

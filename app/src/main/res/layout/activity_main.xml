@@ -356,7 +356,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            android:background="@android:color/white">
+            android:background="?attr/collapsedTitleTextAppearance">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -369,10 +369,9 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/app_titulo"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-                    android:textColor="#000"
-                    android:textStyle="bold"
-                    app:fontFamily="sans-serif" />
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textSize="34sp"
+                    android:textStyle="bold"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -388,6 +387,7 @@
                         android:layout_marginEnd="10dp"
                         android:layout_marginRight="10dp"
                         android:text="@string/boton_nueva_compra"
+                        android:textColor="@color/white"
                         android:textSize="12sp"
                         app:cornerRadius="50sp"
                         app:icon="@drawable/ic_action_name"
@@ -400,6 +400,7 @@
                         android:layout_gravity="center"
                         android:text="@string/boton_historial"
                         android:textSize="12sp"
+                        android:textColor="@color/white"
                         app:backgroundTint="@color/gray"
                         app:cornerRadius="50sp"
                         app:icon="?attr/actionModePasteDrawable"
@@ -432,6 +433,7 @@
                         android:layout_gravity="center"
                         android:text="@string/boton_duplicar_compra"
                         android:textSize="12sp"
+                        android:textColor="@color/white"
                         app:cornerRadius="50sp"
                         app:icon="?attr/actionModeCopyDrawable"
                         app:iconSize="14sp" />
@@ -547,7 +549,7 @@
                         android:layout_weight="1"
                         android:enabled="false"
                         android:text="@string/total_final_inicial"
-                        android:textColor="@color/gray"
+                        android:textColor="?attr/colorOnSecondary"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -569,6 +571,7 @@
                         android:layout_marginEnd="15dp"
                         android:layout_marginRight="15dp"
                         android:text="@string/boton_cancelar"
+                        app:cornerRadius="50sp"
                         app:icon="@drawable/ic_icon_cancel" />
 
                     <Button
@@ -576,7 +579,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="@string/boton_agregar"
+                        android:textColor="@color/white"
                         app:backgroundTint="@color/green_crack"
+                        app:cornerRadius="50sp"
                         app:icon="@drawable/ic_launcher_add" />
                 </LinearLayout>
 
@@ -605,29 +610,6 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textStyle="italic" />
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ListView
-                        android:id="@+id/lvProductos"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="24dp"
-                        android:layout_marginRight="24dp"
-                        android:baselineAligned="false"/>
-
-                </LinearLayout>
-
-
-
 
             </LinearLayout>
 

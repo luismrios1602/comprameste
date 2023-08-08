@@ -10,4 +10,6 @@
     <color name="blue_crack">#4C64EA</color>
     <color name="green_crack">#4BB34F</color>
     <color name="gray">#484A4A</color>
+    <color name="gray_dark">#FF2C2E2E</color>
+    <color name="red">#EF2213</color>
 </resources>

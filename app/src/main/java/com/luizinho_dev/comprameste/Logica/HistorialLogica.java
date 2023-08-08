@@ -33,7 +33,12 @@ public class HistorialLogica {
     public void buscarCompras() {
         try {
 
-            listaCompras = (ArrayList<Compras>) db.comprasDao().findCompras();
+            listaCompras.clear();
+            ArrayList<Compras> compras =  (ArrayList<Compras>) db.comprasDao().findCompras();
+            listaCompras.addAll(compras);
+
+            System.out.println("Compras cargadas exitosamente");
+
 
         } catch (Exception e) {
             System.out.println("Error al cargar compras: "+ e);
