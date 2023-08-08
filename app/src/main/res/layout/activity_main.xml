@@ -370,7 +370,8 @@
                     android:gravity="center"
                     android:text="@string/app_titulo"
                     android:textColor="?attr/colorOnSecondary"
-                    android:textSize="34sp"
+                    android:textSize="28sp"
+                    app:drawableStartCompat="@mipmap/ic_launcher_shop"
                     android:textStyle="bold"/>
 
                 <LinearLayout

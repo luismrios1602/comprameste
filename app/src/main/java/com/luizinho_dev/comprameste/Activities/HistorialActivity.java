@@ -53,7 +53,6 @@ public class HistorialActivity extends AppCompatActivity {
 
     private void asignarEventos() {
 
-
     }
 
     public void actualizarRecyclerView(){
@@ -70,6 +69,7 @@ public class HistorialActivity extends AppCompatActivity {
         historialLogica.buscarCompras();
         actualizarRecyclerView();
     }
+
 
 
 }

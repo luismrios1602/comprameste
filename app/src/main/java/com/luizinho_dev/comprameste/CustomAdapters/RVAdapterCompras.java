@@ -1,5 +1,6 @@
 package com.luizinho_dev.comprameste.CustomAdapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,7 +106,11 @@ public class RVAdapterCompras extends RecyclerView.Adapter<RVAdapterCompras.View
                     // Obtén la posición del elemento que se deslizó
                     int position = viewHolder.getAdapterPosition();
                     Compras compra = compras.get(position);
-//                    MainActivity.editarProducto(compra);
+                    Intent intent = new Intent(viewHolder.itemView.getContext(), MainActivity.class);
+                    intent.putExtra("idCompra",compra.getId());
+                    intent.putExtra("nombreCompra",compra.getNombre());
+                    viewHolder.itemView.getContext().startActivity(intent);
+
                 }
             } catch (Exception e) {
                 System.err.println(e);

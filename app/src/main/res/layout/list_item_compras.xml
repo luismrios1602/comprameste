@@ -14,7 +14,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/cabecera_id"
-        android:textColor="#000"
+        android:textColor="?attr/colorOnSecondary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,7 +27,7 @@
         android:layout_marginLeft="100dp"
         android:layout_marginTop="16dp"
         android:text="@string/cabecera_id"
-        android:textColor="#000"
+        android:textColor="?attr/colorOnSecondary"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/lbIdCompra"
         app:layout_constraintTop_toTopOf="parent" />
@@ -39,7 +39,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:text="@string/cabecera_nombre_compra"
-        android:textColor="#000"
+        android:textColor="?attr/colorOnSecondary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lbIdCompra" />
 
@@ -51,7 +51,7 @@
         android:layout_marginStart="74dp"
         android:layout_marginLeft="74dp"
         android:text="@string/cabecera_nombre_compra"
-        android:textColor="#000"
+        android:textColor="?attr/colorOnSecondary"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -66,7 +66,7 @@
         android:layout_marginStart="74dp"
         android:layout_marginLeft="74dp"
         android:text="@string/cabecera_fecha"
-        android:textColor="#000"
+        android:textColor="?attr/colorOnSecondary"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -80,7 +80,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:text="@string/cabecera_fecha"
-        android:textColor="#000"
+        android:textColor="?attr/colorOnSecondary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lbNombreCompraHis" />
 
@@ -91,7 +91,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:text="@string/cabecera_cantidad_prod"
-        android:textColor="#000"
+        android:textColor="?attr/colorOnSecondary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lbFecha" />
 
@@ -102,7 +102,7 @@
         android:layout_marginStart="18dp"
         android:layout_marginLeft="18dp"
         android:text="@string/cabecera_cantidad_prod"
-        android:textColor="#000"
+        android:textColor="?attr/colorOnSecondary"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/lbCantProdCompra"
         app:layout_constraintTop_toBottomOf="@+id/txtFecha" />
@@ -114,7 +114,7 @@
         android:layout_marginStart="77dp"
         android:layout_marginLeft="77dp"
         android:text="@string/cabecera_total"
-        android:textColor="#000"
+        android:textColor="?attr/colorOnSecondary"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/lbTotalCompra"
         app:layout_constraintTop_toBottomOf="@+id/txtCantProdCompra" />
@@ -126,14 +126,14 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:text="@string/lb_total_item"
-        android:textColor="#000"
+        android:textColor="?attr/colorOnSecondary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lbCantProdCompra" />
 
     <View
         android:id="@+id/dividerCompras"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="3dp"
         android:layout_marginTop="8dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -76,16 +76,28 @@ public class MainLogica {
         //Si no venimos desde otra vista (O se le da atrás en historial) el bundle viene null
         if(bundle != null){
             System.out.println("idCompra seleccionada: "+bundle.getInt("idCompra"));
-            String nombreCompraSelect = bundle.getString("nombreCompra");
             //Si el id que viene es diferente de 0 entonces le asignamos lo que haya en idCompra (Pero si viene 0 va 0, esa validacion para que? - buena pregunta :v)
             int idCompraSelect = (bundle.getInt("idCompra")!=0) ? bundle.getInt("idCompra") : 0;
 
-            //Le asignamos los datos al objeto global de la compra
-            compraActu.setId(idCompraSelect);
-            compraActu.setNombre(nombreCompraSelect);
+            //Ya con el id seleccionado, consultamos los datos de la compra
+            Compras compraEnc = db.comprasDao().findCompraById(idCompraSelect);
+            System.out.println("Compra encontrada: "+ compraEnc);
 
-            //Cargamos los productos de la compra seleccionada
-            listaProductos = (ArrayList<Productos>) db.productosDao().findProductosByIdCompra(compraActu.getId());
+            //Le asignamos los datos al objeto global de la compra si la compra no es null
+            if (compraEnc != null ){
+                compraActu = compraEnc;
+
+            } else {
+                //Si viene null entonces creamos un objeto nuevo para que no haya peos despues
+                compraActu.setId(0);
+                compraActu.setNombre("");
+                compraActu.setCantProductos(0);
+                compraActu.setFecha("");
+                compraActu.setTotal(0.0);
+            }
+
+            //Una vez consultada la compra, vamos a consultar sus productos
+            cargarProductosByCompra(compraActu.getId());
 
         } else {
             //Si el bundle es null es porque apenas estamos entrando a la app, así que cargamos la ultma compra

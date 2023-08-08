@@ -63,18 +63,21 @@ public class MainActivity extends AppCompatActivity {
         //Cargamos la base de datos desde ROOM (En la logica)
         mainLogica.cargarBD(getApplicationContext());
 
-        //Cargamos la informacion de la ultima compra y seteamos los valores de nombre y total
-        cargarInfoUltimaCompra();
-
-        //Iniciamos el recyclerview con los datos encontrados
-        actualizarRecyclerView();
-
         //Llamamos el bundle por si venimos desde la actividad Historial
         bundle = getIntent().getExtras();
-        System.out.println(bundle);
+        System.out.println("bundle: " + bundle);
 
-        //Cargamos la compra actual, que si se viene desde el historial será la seleccionada, sino será la ultima
-        mainLogica.cargarCompraActual(bundle);
+        if (bundle != null){
+            //Cargamos la compra actual, que si se viene desde el historial será la seleccionada, sino será la ultima
+            mainLogica.cargarCompraActual(bundle);
+        } else {
+            //Cargamos la informacion de la ultima compra y seteamos los valores de nombre y total
+            cargarInfoUltimaCompra();
+        }
+
+        //No importa qué compras cargue, actualizamos / creamos el recyclerview
+        actualizarRecyclerView();
+
 
         //Verificamos sin el id de la compra actual no es 0, para así habilitar el duplicar compra
         boolean habilitar = (mainLogica.compraActu.getId() != 0);
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Cargamos el txt del nombre de la compra con la compra cargada
         txtNombreCompra.setText(mainLogica.compraActu.getNombre());
+        txtTotalFinal.setText("$" + formatea.format(mainLogica.compraActu.getTotal()));
 
         //Asignamos los eventos a los elemtos de la vista
         asignarEventos();
@@ -163,11 +167,12 @@ public class MainActivity extends AppCompatActivity {
         //region Button btnNuevaCompra
         btnNuevaCompra.setOnClickListener(v -> {
             //Limpiamos los campos de productos y los datos de la compra
+            //Limpiamos la compra actual para que no me actualice los datos de la ultima compra
+            mainLogica.compraActu = new Compras(0);
             limpiarCampos();
             txtTotalFinal.setText("$0");
             txtNombreCompra.setText("");
             btnDuplicarCompra.setEnabled(false);
-            mainLogica.compraActu.setId(0);
             mainLogica.listaProductos.clear();
             rvadapter.notifyDataSetChanged();
             actualizarRecyclerView();
@@ -200,6 +205,8 @@ public class MainActivity extends AppCompatActivity {
                     //Si no es null la compra es porque salió todo bien
                     idCompra = nuevaCompra.getId();
                     mainLogica.compraActu = nuevaCompra;
+                    //Actualizamos el nombre en la vista
+                    txtNombreCompra.setText(mainLogica.compraActu.getNombre());
 
                     for(int i = 0; i < mainLogica.listaProductos.size(); i ++){
                         nombre = mainLogica.listaProductos.get(i).getNombre();
@@ -425,12 +432,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void cargarInfoUltimaCompra(){
+
         mainLogica.cargarUltimaCompra();
         txtNombreCompra.setText(mainLogica.compraActu.getNombre());
-
         System.out.println("totalCompra: "+mainLogica.compraActu.getTotal());
         txtTotalFinal.setText("$"+formatea.format(mainLogica.compraActu.getTotal()));
-
 
     }
 
