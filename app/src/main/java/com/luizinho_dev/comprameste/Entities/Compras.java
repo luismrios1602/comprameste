@@ -3,6 +3,7 @@ package com.luizinho_dev.comprameste.Entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.text.MessageFormat;
@@ -28,15 +29,18 @@ public class Compras {
     public Compras() {
     }
 
+    @Ignore
     public Compras(int id) {
         this.id = id;
     }
 
+    @Ignore
     public Compras(String fecha, String nombre) {
         this.fecha = fecha;
         this.nombre = nombre;
     }
 
+    @Ignore
     public Compras(String fecha, int cantProductos, double total, String nombre) {
         this.fecha = fecha;
         this.cantProductos = cantProductos;

@@ -68,8 +68,19 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("bundle: " + bundle);
 
         if (bundle != null){
-            //Cargamos la compra actual, que si se viene desde el historial será la seleccionada, sino será la ultima
-            mainLogica.cargarCompraActual(bundle);
+            //Cargamos la compra actual, que si se viene desde el historial será la seleccionada
+
+            //Pero antes, debemos validar si el bundle trae idCompra porque sino el SO me está mamando gallo mandando un Extras que no tiene nada
+            int idCompra = bundle.getInt("idCompra");
+            System.out.println("idCompra del bundle: "+ idCompra);
+
+            //Siendo así, si es 0 el idCompra (No sé por qué) entonces llamamos a cargar la ultima, sino es 0 entonces llamamos a esa
+            if (idCompra != 0){
+                mainLogica.cargarCompraActual(bundle);
+
+            } else {
+                cargarInfoUltimaCompra();
+            }
         } else {
             //Cargamos la informacion de la ultima compra y seteamos los valores de nombre y total
             cargarInfoUltimaCompra();

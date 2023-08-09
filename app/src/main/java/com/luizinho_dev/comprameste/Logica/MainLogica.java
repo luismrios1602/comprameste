@@ -48,6 +48,8 @@ public class MainLogica {
             //Consultamos en la base de datos la última compra
             Compras ultCompra = db.comprasDao().findUltimaCompra();
 
+            System.out.println("Ultima compra: " + ultCompra);
+
             //Si no hay ultima compra el resultado es null, por tanto si hay un objeto, buscamos los productos de dicha compra
             if (ultCompra != null)  {
                 listaProductos.clear();

@@ -8,7 +8,7 @@ import com.luizinho_dev.comprameste.Dao.ProductosDao;
 import com.luizinho_dev.comprameste.Entities.Compras;
 import com.luizinho_dev.comprameste.Entities.Productos;
 
-@Database(version = 1, entities = {Productos.class, Compras.class})
+@Database(version = 1, entities = {Productos.class, Compras.class}, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ComprasDao comprasDao();

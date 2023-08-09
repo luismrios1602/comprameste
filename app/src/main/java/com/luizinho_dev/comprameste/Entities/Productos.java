@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.text.MessageFormat;
@@ -15,7 +17,7 @@ import java.text.MessageFormat;
         childColumns = "id_compra",
         onDelete = ForeignKey.CASCADE,
         deferred = true
-))
+), indices = {@Index(name = "idx_id_compra", value = "id_compra")})
 public class Productos {
 
     @PrimaryKey(autoGenerate = true)
@@ -41,6 +43,7 @@ public class Productos {
     public Productos() {
     }
 
+    @Ignore
     public Productos(String nombre, int cantidad, double valorUnitario, double total, int idCompra) {
         this.nombre = nombre;
         this.cantidad = cantidad;
