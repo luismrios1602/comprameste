@@ -1,12 +1,15 @@
 package com.luizinho_dev.comprameste.Logica;
 
+import android.app.AlertDialog;
 import android.content.Context;
 
 import androidx.room.Room;
 
+import com.luizinho_dev.comprameste.Activities.HistorialActivity;
 import com.luizinho_dev.comprameste.Database.AppDatabase;
 import com.luizinho_dev.comprameste.Entities.Compras;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 public class HistorialLogica {
@@ -23,7 +26,7 @@ public class HistorialLogica {
         try {
 
             db = Room.databaseBuilder(context, AppDatabase.class, "compramesteDB").allowMainThreadQueries().build();
-            System.out.println("Conexion creada.");
+            System.out.println("Conexion exitosa.");
 
         } catch (Exception e){
             System.out.println("Error al crear la conexion");
@@ -43,5 +46,54 @@ public class HistorialLogica {
         } catch (Exception e) {
             System.out.println("Error al cargar compras: "+ e);
         }
+    }
+
+    public void eliminarCompra(Context context, Compras compra){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Borrar Compra...").
+                setMessage(MessageFormat.format("¿Está seguro que desea borrar la compra {0}?",compra.getNombre())).
+                setCancelable(true).
+                setPositiveButton("Sí",(dialog, which) -> {
+
+                    try {
+
+                        System.out.println("Eliminando compra...");
+                        //Validamos que haya una conexion, sino creamos una
+                        if (db == null) {
+                            cargarBD(context);
+                        }
+
+                        int deleted = db.comprasDao().deleteCompra(compra);
+                        System.out.println(deleted);
+                        System.out.println("Compra eliminada exitosamente");
+
+                        // Mandamos a actualizar a adapter del HistorialActivity para que no se quede pegado
+                        if (context instanceof HistorialActivity) {
+                            //Cargamos las compras para actualizar la lista
+                            buscarCompras();
+                            //Actualizamos el recycler de la vista
+                            ((HistorialActivity) context).actualizarRecyclerView();
+                        }
+
+                    } catch (Exception e){
+                        System.err.println("Error al eliminar compra: "+ e);
+
+                    }
+
+
+
+                }).
+                setNegativeButton("No",(dialog, which) -> {
+
+                    System.out.println("No eliminar compra");
+                    dialog.cancel();
+
+                    // Mandamos a actualizar a adapter del HistorialActivity para que no se quede pegado
+                    if (context instanceof HistorialActivity) {
+                        ((HistorialActivity) context).actualizarRecyclerView();
+                    }
+
+                }).show();
+
     }
 }

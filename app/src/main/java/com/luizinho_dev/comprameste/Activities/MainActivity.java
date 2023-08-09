@@ -436,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void actualizarRecyclerView(){
         rvProductos.setLayoutManager(new LinearLayoutManager(this));
-        rvadapter = new RVAdapterProductos(mainLogica.listaProductos);
+        rvadapter = new RVAdapterProductos(getApplicationContext(),mainLogica.listaProductos);
         rvProductos.setAdapter(rvadapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(rvadapter.itemTouchHelperCallback);
         itemTouchHelper.attachToRecyclerView(rvProductos);

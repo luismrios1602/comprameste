@@ -1,6 +1,7 @@
 package com.luizinho_dev.comprameste.Dao;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -26,6 +27,9 @@ public interface ComprasDao {
 
     @Query("SELECT * FROM Compras WHERE id = :id LIMIT 1")
     Compras findCompraById(long id);
+
+    @Delete
+    int deleteCompra(Compras compra);
 
 
 }

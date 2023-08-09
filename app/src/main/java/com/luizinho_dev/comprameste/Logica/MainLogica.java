@@ -1,10 +1,13 @@
 package com.luizinho_dev.comprameste.Logica;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.room.Room;
 
+import com.luizinho_dev.comprameste.Activities.HistorialActivity;
+import com.luizinho_dev.comprameste.Activities.MainActivity;
 import com.luizinho_dev.comprameste.Compra;
 import com.luizinho_dev.comprameste.CustomAdapters.CustomAdapterProductos;
 import com.luizinho_dev.comprameste.Dao.ComprasDao;
@@ -13,6 +16,7 @@ import com.luizinho_dev.comprameste.Entities.Compras;
 import com.luizinho_dev.comprameste.Entities.Productos;
 
 import java.security.spec.ECField;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -271,18 +275,63 @@ public class MainLogica {
 
     }
 
-    public boolean eliminarProducto(long idProd){
+    public void eliminarProducto(Context context, Productos producto){
 
         try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Borrar Producto...").
+                    setMessage(MessageFormat.format("¿Está seguro que desea borrar el producto {0}?",producto.getNombre())).
+                    setCancelable(true).
+                    setPositiveButton("Sí",(dialog, which) -> {
+                        try {
+                            System.out.println("Eliminando producto...");
+                            //Validamos que haya una conexion, sino creamos una
+                            if (db == null) {
+                                cargarBD(context);
+                            }
 
-            Productos prod = buscarProductoById(idProd);
-            db.productosDao().deleteProducto(prod);
-            System.out.println("Producto "+ idProd + " eliminado.");
-            return true;
+                            int deleted = db.productosDao().deleteProducto(producto);
+                            System.out.println(deleted);
+                            System.out.println("Producto eliminado exitosamente");
+
+                            // Mandamos a actualizar a adapter del MainActivity para que no se quede pegado
+                            if (context instanceof MainActivity) {
+                                //Calculamos el total de la compra que esto actualiza la lista, calcula y actualiza la compra
+                                ((MainActivity) context).calcularTotalFinal();
+                                //Actualizamos el recycler de la vista
+                                ((MainActivity) context).actualizarRecyclerView();
+                                //Limpiamos la vista del formulario por si le dieron editar y luego eliminar
+                                ((MainActivity) context).limpiarCampos();
+                            }
+
+                        } catch (Exception e){
+                            System.err.println("Error al eliminar producto: "+ e);
+
+                        }
+
+                    }).
+                    setNegativeButton("No",(dialog, which) -> {
+
+                        System.out.println("No eliminar compra");
+                        dialog.cancel();
+
+                        //Validamos que haya una conexion, sino creamos una (Ni sé por qué pero bueno :v)
+                        if (db == null) {
+                            cargarBD(context);
+                        }
+
+                        // Mandamos a actualizar a adapter del MainActivity para que no se quede pegado
+                        if (context instanceof MainActivity) {
+                            //Cargamos los productos para actualizar la lista
+                            cargarProductosByCompra(producto.getIdCompra());
+                            ((MainActivity) context).actualizarRecyclerView();
+                        }
+
+                    }).show();
+
 
         } catch (Exception e){
-            System.out.println("Error al eliminar producto "+idProd+": "+e);
-            return false;
+            System.out.println("Error al eliminar producto "+producto.getId()+": "+e);
         }
 
     }

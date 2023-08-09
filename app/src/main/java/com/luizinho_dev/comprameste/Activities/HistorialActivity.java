@@ -57,7 +57,7 @@ public class HistorialActivity extends AppCompatActivity {
 
     public void actualizarRecyclerView(){
         rvCompras.setLayoutManager(new LinearLayoutManager(this));
-        rvadapter = new RVAdapterCompras(historialLogica.listaCompras);
+        rvadapter = new RVAdapterCompras(getApplicationContext(),historialLogica.listaCompras);
         rvCompras.setAdapter(rvadapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(rvadapter.itemTouchHelperCallback);
         itemTouchHelper.attachToRecyclerView(rvCompras);

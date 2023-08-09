@@ -21,7 +21,7 @@ public interface ProductosDao {
 
     //Permite eliminar varios productos
     @Delete
-    void deleteProducto(Productos...productos);
+    int deleteProducto(Productos...productos);
 
     @Query("SELECT * FROM Productos WHERE id_compra = :idCompra")
     List<Productos> findProductosByIdCompra(int idCompra);

@@ -1,32 +1,41 @@
 package com.luizinho_dev.comprameste.CustomAdapters;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.comprameste.R;
 import com.luizinho_dev.comprameste.Activities.MainActivity;
 import com.luizinho_dev.comprameste.Entities.Compras;
-import com.luizinho_dev.comprameste.Entities.Productos;
+import com.luizinho_dev.comprameste.Logica.HistorialLogica;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class RVAdapterCompras extends RecyclerView.Adapter<RVAdapterCompras.ViewHolder> {
     private ArrayList<Compras> compras;
+    private Drawable icon_delete;
+    private Drawable icon_detail;
 
+    AlertDialog.Builder builder;
     DecimalFormat formatea = new DecimalFormat("###,###.##");
 
     // Constructor para inicializar el adaptador con la lista de datos
-    public RVAdapterCompras(ArrayList<Compras> compras) {
+    public RVAdapterCompras(Context context, ArrayList<Compras> compras) {
         this.compras = compras;
+        //Cargamos el icono a mostrar al mostrar y eliminar
+        icon_delete = ContextCompat.getDrawable(context, R.drawable.ic_icon_delete);
+        icon_detail = ContextCompat.getDrawable(context, R.drawable.ic_icon_detail);
     }
 
     @NonNull
@@ -79,7 +88,7 @@ public class RVAdapterCompras extends RecyclerView.Adapter<RVAdapterCompras.View
         public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
 //            int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
             int dragFlags = 0;
-            int swipeFlags = ItemTouchHelper.LEFT ;
+            int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             return makeMovementFlags(dragFlags, swipeFlags);
         }
 
@@ -111,6 +120,11 @@ public class RVAdapterCompras extends RecyclerView.Adapter<RVAdapterCompras.View
                     intent.putExtra("nombreCompra",compra.getNombre());
                     viewHolder.itemView.getContext().startActivity(intent);
 
+                } else {
+                    HistorialLogica historialLogica = new HistorialLogica();
+                    int position = viewHolder.getAdapterPosition();
+                    historialLogica.eliminarCompra(viewHolder.itemView.getContext(), compras.get(position));
+
                 }
             } catch (Exception e) {
                 System.err.println(e);
@@ -120,7 +134,42 @@ public class RVAdapterCompras extends RecyclerView.Adapter<RVAdapterCompras.View
         @Override
         public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
             // Ajusta el umbral de deslizamiento
-            return 0.10f; // Por ejemplo, deslizar al menos la mitad del ancho del elemento
+            return 0.90f; // Por ejemplo, deslizar al menos la mitad del ancho del elemento
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                View itemView = viewHolder.itemView;
+
+                //Le asignamos el margen que van a tener los iconos (para que queden centrados del lado que les toca
+                int iconMargin_delete = (itemView.getHeight() - icon_delete.getIntrinsicHeight()) / 2;
+                int iconMargin_detail = (itemView.getHeight() - icon_delete.getIntrinsicHeight()) / 2;
+
+                //Calculamos que el movimiento del item sea de al menos 20% para mostrar el icono (en ambos casos)
+                if (Math.abs(dX) > itemView.getWidth() * 0.2f) {
+                    if (dX > 0) {
+                        //Si el movimiento horizontal es mayor a 0 es porque es hacia la derecha
+                        icon_delete.setBounds(
+                                itemView.getLeft() + iconMargin_delete,
+                                itemView.getTop() + iconMargin_delete,
+                                itemView.getLeft() + iconMargin_delete + icon_delete.getIntrinsicWidth(),
+                                itemView.getBottom() - iconMargin_delete);
+                        icon_delete.draw(c);
+                    } else {
+
+                        //Si el movimiento horizontal es menor a 0 es porque es hacia la izquierda
+                        icon_detail.setBounds(
+                                itemView.getRight() - iconMargin_detail - icon_detail.getIntrinsicWidth(),
+                                itemView.getTop() + iconMargin_detail,
+                                itemView.getRight() - iconMargin_detail,
+                                itemView.getBottom() - iconMargin_detail);
+                        icon_detail.draw(c);
+                    }
+                }
+
+            }
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
 
     };
