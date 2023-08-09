@@ -1,5 +1,7 @@
 package com.luizinho_dev.comprameste.Activities;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -11,6 +13,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -108,14 +112,37 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        /*//Antes de salir validar si han pasado hasta 5 segundos antes de cerrar de nuevo la app
-        if ((this.exitTime + 5000) < System.currentTimeMillis()){
-            Toast.makeText(getApplicationContext(),"Presionar nuevamente para salir." , Toast.LENGTH_SHORT).show();
-            //Si no han pasado 5 segundos, entonces le asignamos el valor actual para que espere 5 segundos de cuando dio clic
-            this.exitTime = System.currentTimeMillis();
-        } else {
-            finish();
-        }*/
+        Toast.makeText(getApplicationContext(),"Presione el botón de salir." , Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.im_exit:
+                System.out.println("Press");
+                new AlertDialog.Builder(this).
+                        setMessage("¿Estás seguro que deseas salir?").
+                        setCancelable(false).
+                        setPositiveButton("Sí",(dialog, which) -> {
+//                            finish();
+                            //Cerramos todas las activities en cola que se hayan abierto
+                            finishAffinity();
+                        }).
+                        setNegativeButton("No", (dialog, which) -> {
+                            System.out.println("No se fue");
+                        }).show();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**

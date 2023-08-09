@@ -134,7 +134,7 @@ public class RVAdapterCompras extends RecyclerView.Adapter<RVAdapterCompras.View
         @Override
         public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
             // Ajusta el umbral de deslizamiento
-            return 0.90f; // Por ejemplo, deslizar al menos la mitad del ancho del elemento
+            return 0.20f; // Por ejemplo, deslizar al menos la mitad del ancho del elemento
         }
 
         @Override

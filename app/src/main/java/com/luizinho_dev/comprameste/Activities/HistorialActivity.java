@@ -46,6 +46,14 @@ public class HistorialActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("idCompra",0);
+        startActivity(intent);
+        finish();
+    }
+
     public void cargarElementos(){
         rvCompras = findViewById(R.id.rvCompras);
 

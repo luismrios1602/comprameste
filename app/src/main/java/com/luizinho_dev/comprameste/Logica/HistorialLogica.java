@@ -70,9 +70,7 @@ public class HistorialLogica {
                         // Mandamos a actualizar a adapter del HistorialActivity para que no se quede pegado
                         if (context instanceof HistorialActivity) {
                             //Cargamos las compras para actualizar la lista
-                            buscarCompras();
-                            //Actualizamos el recycler de la vista
-                            ((HistorialActivity) context).actualizarRecyclerView();
+                            ((HistorialActivity) context).cargarCompras();
                         }
 
                     } catch (Exception e){
