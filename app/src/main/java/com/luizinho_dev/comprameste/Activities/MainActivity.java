@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
             String nombreCompra = txtNombreCompra.getText().toString();
             if(mainLogica.compraActu.getId() != 0){
                 System.out.println("Actualizando compra...");
-                mainLogica.actualizarCompra(mainLogica.compraActu.getId(),mainLogica.listaProductos.size(),totalFinal,nombreCompra);
+                mainLogica.actualizarCompra(mainLogica.compraActu.getId(),mainLogica.listaProductos.size(),mainLogica.compraActu.getTotal(),nombreCompra);
             } else {
                 //Si el id de la compra actual es 0 entonces solo le asignamos el nombre pero no la guardamos en BD
                 mainLogica.compraActu.setNombre(nombreCompra);
