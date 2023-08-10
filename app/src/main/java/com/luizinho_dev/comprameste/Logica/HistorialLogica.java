@@ -1,6 +1,7 @@
 package com.luizinho_dev.comprameste.Logica;
 
 import static com.luizinho_dev.comprameste.Database.AppDatabase.MIGRATION_1_2;
+import static com.luizinho_dev.comprameste.Database.AppDatabase.MIGRATION_2_3;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -27,7 +28,11 @@ public class HistorialLogica {
     public void cargarBD(Context context){
         try {
 
-            db = Room.databaseBuilder(context, AppDatabase.class, "compramesteDB").allowMainThreadQueries().addMigrations(MIGRATION_1_2).build();
+            db = Room.databaseBuilder(context, AppDatabase.class, "compramesteDB")
+                    .allowMainThreadQueries()
+                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_2_3)
+                    .build();
             System.out.println("Conexion exitosa.");
 
         } catch (Exception e){

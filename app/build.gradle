@@ -10,8 +10,8 @@ android {
         applicationId 'com.luizinho_dev.comprameste'
         minSdkVersion 16
         targetSdk 33
-        versionCode 5
-        versionName "3.1"
+        versionCode 6
+        versionName "4.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

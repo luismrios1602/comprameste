@@ -6,8 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -20,13 +20,15 @@ import com.luizinho_dev.comprameste.Entities.Productos;
 import com.luizinho_dev.comprameste.Logica.MainLogica;
 
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+
 
 public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.ViewHolder> {
-    private ArrayList<Productos> productos;
-    private Drawable icon_delete;
-    private Drawable icon_edit;
+    //Ponemos el array de productos como static para poderlo manipular desde los métodos de los listener aquí mismo
+    private static ArrayList<Productos> productos = null;
+    private final Drawable icon_delete;
+    private final Drawable icon_edit;
 
     DecimalFormat formatea = new DecimalFormat("###,###,###.##");
 
@@ -53,9 +55,10 @@ public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.
 
         holder.txtNomProd.setText(producto.getNombre());
         holder.txtCantidad.setText(String.valueOf(producto.getCantidad()));
-        holder.txtValorUni.setText("$ "+formatea.format(producto.getValorUnitario()));
-        holder.txtPorcDesc.setText(String.valueOf(producto.getPorcDesc())+" %");
-        holder.txtTotal.setText("$ "+formatea.format(producto.getTotal()));
+        holder.txtValorUni.setText(MessageFormat.format("$ {0}", formatea.format(producto.getValorUnitario())));
+        holder.txtPorcDesc.setText(MessageFormat.format("{0} %", producto.getPorcDesc()));
+        holder.checkComprado.setChecked(producto.isComprado());
+        holder.txtTotal.setText(MessageFormat.format("$ {0}", formatea.format(producto.getTotal())));
     }
 
     @Override
@@ -65,7 +68,8 @@ public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtNomProd, txtCantidad, txtValorUni, txtPorcDesc, txtTotal, lbCantidad, lbValorUnitario, lbTotal;
+        public TextView txtNomProd, txtCantidad, txtValorUni, txtPorcDesc, txtTotal;
+        public CheckBox checkComprado;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -75,11 +79,31 @@ public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.
             txtValorUni = itemView.findViewById(R.id.txtValorProd);
             txtPorcDesc = itemView.findViewById(R.id.txtPorcDesc);
             txtTotal = itemView.findViewById(R.id.txtTotalProd);
+            checkComprado = itemView.findViewById(R.id.checkComprado);
+
 
             itemView.setOnClickListener(view -> {
-                int position = getAdapterPosition();
+                int position = getAbsoluteAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
+                    //De entrada, asignamos como comprado lo contrario de lo que tenga
+                    productos.get(position).setComprado(!productos.get(position).isComprado());
 
+                    //Desempaquetamos (manualmente) el objeto para mandar llamar la función de actualizar
+                    long id = productos.get(position).getId();
+                    String nombre = productos.get(position).getNombre();
+                    int cantidad = productos.get(position).getCantidad();
+                    double valorUnitario = productos.get(position).getValorUnitario();
+                    double porcDesc = productos.get(position).getPorcDesc();
+                    double total = productos.get(position).getTotal();
+                    int idCompra = productos.get(position).getIdCompra();
+                    boolean comprado = productos.get(position).isComprado();
+
+                    //Le asignamos ese valor al checkbox
+                    checkComprado.setChecked(productos.get(position).isComprado());
+
+                    //Mandamos a actualizar el producto para que quede actualizado ese valor
+                    MainLogica mainLogica = new MainLogica();
+                    mainLogica.actualizarProducto(view.getContext(), id, nombre, cantidad, valorUnitario, porcDesc, total, comprado, idCompra);
                 }
             });
 
@@ -88,7 +112,7 @@ public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.
     }
 
     // Implementa ItemTouchHelper.Callback para el arrastrar y soltar
-    public ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelper.Callback() {
+    public final ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelper.Callback() {
 
         @Override
         public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
@@ -108,8 +132,8 @@ public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.
                 Collections.swap(productos, sourcePosition, targetPosition);
                 notifyItemMoved(sourcePosition, targetPosition);*/
                 return false;
-            } catch (Exception e){
-                System.out.println(e);
+            } catch (Exception e) {
+                System.out.println("Error al reordenar elementos: "+e);
                 return false;
             }
         }
@@ -120,20 +144,20 @@ public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.
                 //Si deslizó hacía la derecha realizamos la logica del editar
                 if (direction == ItemTouchHelper.LEFT) {
                     // Obtén la posición del elemento que se deslizó
-                    int position = viewHolder.getAdapterPosition();
+                    int position = viewHolder.getAbsoluteAdapterPosition();
                     Productos producto = productos.get(position);
                     MainActivity.editarProducto(producto);
                 } else {
                     //Sino entonces la del eliminar
                     System.out.println("Eliminando producto...");
                     MainLogica mainLogica = new MainLogica();
-                    int position = viewHolder.getAdapterPosition();
+                    int position = viewHolder.getAbsoluteAdapterPosition();
                     Productos producto = productos.get(position);
 
                     mainLogica.eliminarProducto(viewHolder.itemView.getContext(), producto);
                 }
             } catch (Exception e) {
-                System.err.println(e);
+                System.err.println("Error al deslizar el elemento: "+ e);
             }
         }
 
@@ -144,7 +168,7 @@ public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.
         }
 
         /**
-         * @description             Evento que se ejecuta al mover un item a la derecha o izquierda
+         * @description Evento que se ejecuta al mover un item a la derecha o izquierda
          * @param c                 The canvas which RecyclerView is drawing its children
          * @param recyclerView      The RecyclerView to which ItemTouchHelper is attached to
          * @param viewHolder        The ViewHolder which is being interacted by the User or it was

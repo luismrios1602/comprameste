@@ -33,6 +33,8 @@ public class Productos {
     @ColumnInfo(name = "val_uni")
     public double valorUnitario;
 
+    @ColumnInfo(name = "porc_desc", defaultValue = "0")
+    public double porcDesc;
 
     @ColumnInfo(name = "total")
     public double total;
@@ -41,8 +43,8 @@ public class Productos {
     @ColumnInfo(name = "id_compra")
     public int idCompra;
 
-    @ColumnInfo(name = "porc_desc", defaultValue = "0")
-    public double porcDesc;
+    @ColumnInfo(name = "comprado", defaultValue = "0")
+    public boolean comprado;
 
     public Productos() {
     }
@@ -122,9 +124,17 @@ public class Productos {
         this.idCompra = idCompra;
     }
 
+    public boolean isComprado() {
+        return comprado;
+    }
+
+    public void setComprado(boolean comprado) {
+        this.comprado = comprado;
+    }
+
     @Override
     public String toString(){
-        return MessageFormat.format("Id: {4}, Nombre: {0}, Cant: {1}, Valor Uni.: {2}, Total: {3}",
-                this.nombre, this.cantidad, this.valorUnitario, this.total, this.id);
+        return MessageFormat.format("Id: {4}, Nombre: {0}, Cant: {1}, Valor Uni.: {2}, Desc: {5}, Total: {3}, Comprado: {6}",
+                this.nombre, this.cantidad, this.valorUnitario, this.total, this.id, this.porcDesc, this.comprado);
     }
 }

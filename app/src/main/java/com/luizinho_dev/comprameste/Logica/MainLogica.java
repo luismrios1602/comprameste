@@ -1,6 +1,7 @@
 package com.luizinho_dev.comprameste.Logica;
 
 import static com.luizinho_dev.comprameste.Database.AppDatabase.MIGRATION_1_2;
+import static com.luizinho_dev.comprameste.Database.AppDatabase.MIGRATION_2_3;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,21 +9,16 @@ import android.os.Bundle;
 
 import androidx.room.Room;
 
-import com.luizinho_dev.comprameste.Activities.HistorialActivity;
 import com.luizinho_dev.comprameste.Activities.MainActivity;
-import com.luizinho_dev.comprameste.Compra;
-import com.luizinho_dev.comprameste.CustomAdapters.CustomAdapterProductos;
-import com.luizinho_dev.comprameste.Dao.ComprasDao;
 import com.luizinho_dev.comprameste.Database.AppDatabase;
 import com.luizinho_dev.comprameste.Entities.Compras;
 import com.luizinho_dev.comprameste.Entities.Productos;
 
-import java.security.spec.ECField;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+
 
 public class MainLogica {
 
@@ -40,7 +36,10 @@ public class MainLogica {
     public void cargarBD(Context context){
         try {
 
-            db = Room.databaseBuilder(context, AppDatabase.class, "compramesteDB").addMigrations(MIGRATION_1_2).allowMainThreadQueries().build();
+            db = Room.databaseBuilder(context, AppDatabase.class, "compramesteDB")
+                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_2_3)
+                    .allowMainThreadQueries().build();
             System.out.println("Conexion creada.");
 
         } catch (Exception e){
@@ -252,8 +251,13 @@ public class MainLogica {
 
     }
 
-    public boolean actualizarProducto(long idProd, String nombre, int cantidad, double valorUnitario, double porcDesc, double total, int idCompra){
+    public boolean actualizarProducto(Context context, long idProd, String nombre, int cantidad, double valorUnitario, double porcDesc, double total, boolean comprado, int idCompra){
         try {
+
+            //Toca meterle el contexto porque como venimos desde el adapter, entonces a papi Room le da amsieda
+            if (db == null) {
+                cargarBD(context);
+            }
 
             Productos prod = buscarProductoById(idProd);
             if (prod != null){
@@ -263,6 +267,7 @@ public class MainLogica {
                 prod.setPorcDesc(porcDesc);
                 prod.setTotal(total);
                 prod.setIdCompra(idCompra);
+                prod.setComprado(comprado);
 
                 db.productosDao().updateProducto(prod);
                 System.out.println("Producto actualizado!");

@@ -11,7 +11,7 @@ import com.luizinho_dev.comprameste.Dao.ProductosDao;
 import com.luizinho_dev.comprameste.Entities.Compras;
 import com.luizinho_dev.comprameste.Entities.Productos;
 
-@Database(version = 2, entities = {Productos.class, Compras.class}, exportSchema = true, autoMigrations = {
+@Database(version = 3, entities = {Productos.class, Compras.class}, exportSchema = true, autoMigrations = {
 //        @AutoMigration(from = 1, to = 2),
 })
 public abstract class AppDatabase extends RoomDatabase {
@@ -23,6 +23,13 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE Productos ADD COLUMN porc_desc REAL DEFAULT 0 NOT NULL");
+        }
+    };
+
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE Productos ADD COLUMN comprado INTEGER DEFAULT 0 NOT NULL");
         }
     };
 

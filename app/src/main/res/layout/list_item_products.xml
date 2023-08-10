@@ -11,13 +11,13 @@
         android:id="@+id/txtNomProd"
         android:layout_width="238dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="@string/cabecera_producto"
         android:textColor="?attr/colorOnSecondary"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.093"
+        app:layout_constraintHorizontal_bias="0.352"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,46 +25,21 @@
         android:id="@+id/lbCant"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="8dp"
         android:text="@string/lb_cantidad_item"
         android:textColor="?attr/colorOnSecondary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtNomProd" />
 
     <TextView
-        android:id="@+id/txtCantProd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginLeft="52dp"
-        android:layout_marginTop="4dp"
-        android:text="@string/cabecera_cantidad"
-        android:textColor="?attr/colorOnSecondary"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/lbCant"
-        app:layout_constraintTop_toBottomOf="@+id/txtNomProd" />
-
-
-    <TextView
-        android:id="@+id/lbValUni"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:text="@string/lb_valUni_item"
-        android:textColor="?attr/colorOnSecondary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbCant" />
-
-
-    <TextView
         android:id="@+id/txtValorProd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="4dp"
         android:text="@string/cabecera_valor_unitario"
         android:textColor="?attr/colorOnSecondary"
         android:textStyle="bold"
@@ -72,28 +47,55 @@
         app:layout_constraintTop_toBottomOf="@+id/txtCantProd" />
 
     <TextView
-        android:id="@+id/lbPorcDesc"
+        android:id="@+id/txtCantProd"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:text="@string/lb_porcDesc_item"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginLeft="56dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/cabecera_cantidad"
         android:textColor="?attr/colorOnSecondary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbValUni" />
-
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/lbCant"
+        app:layout_constraintTop_toBottomOf="@+id/txtNomProd" />
 
     <TextView
         android:id="@+id/txtPorcDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginLeft="36dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="4dp"
         android:text="@string/cabecera_descuento"
         android:textColor="?attr/colorOnSecondary"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/lbPorcDesc"
         app:layout_constraintTop_toBottomOf="@+id/txtValorProd" />
+
+    <TextView
+        android:id="@+id/lbValUni"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/lb_valUni_item"
+        android:textColor="?attr/colorOnSecondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lbCant" />
+
+    <TextView
+        android:id="@+id/lbPorcDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/lb_porcDesc_item"
+        android:textColor="?attr/colorOnSecondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lbValUni" />
+
 
     <TextView
         android:id="@+id/txtTotalProd"
@@ -106,7 +108,7 @@
         android:text="@string/cabecera_total"
         android:textAlignment="textStart"
         android:textColor="?attr/colorOnSecondary"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -123,5 +125,16 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtPorcDesc" />
+
+    <CheckBox
+        android:id="@+id/checkComprado"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.544"
+        android:theme="@style/colored_checkbox"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

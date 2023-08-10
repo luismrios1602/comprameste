@@ -490,7 +490,8 @@ public class MainActivity extends AppCompatActivity {
         double porcDesc = Double.parseDouble(txtDescuento.getText().toString());
         double total = Double.parseDouble(txtTotal.getText().toString());
 
-        boolean prodActualizado = mainLogica.actualizarProducto(idProd, nombre, cantidad, valorUnitario, porcDesc, total, mainLogica.compraActu.getId());
+        //Al actualizar el producto damos por hecho que si lo edito lo checkeo
+        boolean prodActualizado = mainLogica.actualizarProducto(getApplicationContext(), idProd, nombre, cantidad, valorUnitario, porcDesc, total, true, mainLogica.compraActu.getId());
 
         if (prodActualizado){
             //Si se actualizó correctamente tenemos que actualizar el adapter
