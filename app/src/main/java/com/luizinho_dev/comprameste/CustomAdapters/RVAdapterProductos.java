@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -26,7 +28,7 @@ public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.
     private Drawable icon_delete;
     private Drawable icon_edit;
 
-    DecimalFormat formatea = new DecimalFormat("###,###.##");
+    DecimalFormat formatea = new DecimalFormat("###,###,###.##");
 
     // Constructor para inicializar el adaptador con la lista de datos
     public RVAdapterProductos(Context context, ArrayList<Productos> productos) {
@@ -52,6 +54,7 @@ public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.
         holder.txtNomProd.setText(producto.getNombre());
         holder.txtCantidad.setText(String.valueOf(producto.getCantidad()));
         holder.txtValorUni.setText("$ "+formatea.format(producto.getValorUnitario()));
+        holder.txtPorcDesc.setText(String.valueOf(producto.getPorcDesc())+" %");
         holder.txtTotal.setText("$ "+formatea.format(producto.getTotal()));
     }
 
@@ -62,7 +65,7 @@ public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView txtNomProd, txtCantidad, txtValorUni, txtTotal, lbCantidad, lbValorUnitario, lbTotal;
+        public TextView txtNomProd, txtCantidad, txtValorUni, txtPorcDesc, txtTotal, lbCantidad, lbValorUnitario, lbTotal;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,7 +73,15 @@ public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.
             txtNomProd = itemView.findViewById(R.id.txtNomProd);
             txtCantidad = itemView.findViewById(R.id.txtCantProd);
             txtValorUni = itemView.findViewById(R.id.txtValorProd);
+            txtPorcDesc = itemView.findViewById(R.id.txtPorcDesc);
             txtTotal = itemView.findViewById(R.id.txtTotalProd);
+
+            itemView.setOnClickListener(view -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+
+                }
+            });
 
 
         }
@@ -78,6 +89,7 @@ public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.
 
     // Implementa ItemTouchHelper.Callback para el arrastrar y soltar
     public ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelper.Callback() {
+
         @Override
         public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
 //            int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
@@ -131,6 +143,18 @@ public class RVAdapterProductos extends RecyclerView.Adapter<RVAdapterProductos.
             return 0.10f; // Por ejemplo, deslizar al menos la mitad del ancho del elemento
         }
 
+        /**
+         * @description             Evento que se ejecuta al mover un item a la derecha o izquierda
+         * @param c                 The canvas which RecyclerView is drawing its children
+         * @param recyclerView      The RecyclerView to which ItemTouchHelper is attached to
+         * @param viewHolder        The ViewHolder which is being interacted by the User or it was
+         *                          interacted and simply animating to its original position
+         * @param dX                The amount of horizontal displacement caused by user's action
+         * @param dY                The amount of vertical displacement caused by user's action
+         * @param actionState       The type of interaction on the View. Is either ACTION_STATE_DRAG or ACTION_STATE_SWIPE.
+         * @param isCurrentlyActive True if this view is currently being controlled by the user or
+         *                          false it is simply animating back to its original state.
+         */
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {

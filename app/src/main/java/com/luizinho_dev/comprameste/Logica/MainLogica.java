@@ -1,5 +1,7 @@
 package com.luizinho_dev.comprameste.Logica;
 
+import static com.luizinho_dev.comprameste.Database.AppDatabase.MIGRATION_1_2;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -38,7 +40,7 @@ public class MainLogica {
     public void cargarBD(Context context){
         try {
 
-            db = Room.databaseBuilder(context, AppDatabase.class, "compramesteDB").allowMainThreadQueries().build();
+            db = Room.databaseBuilder(context, AppDatabase.class, "compramesteDB").addMigrations(MIGRATION_1_2).allowMainThreadQueries().build();
             System.out.println("Conexion creada.");
 
         } catch (Exception e){
@@ -218,7 +220,7 @@ public class MainLogica {
         }
     }
 
-    public Productos crearProducto(String nombre, int cantidad, double valorUnitario, double total, int idCompra){
+    public Productos crearProducto(String nombre, int cantidad, double valorUnitario, double porcDesc, double total, int idCompra){
 
         try{
 
@@ -237,7 +239,7 @@ public class MainLogica {
                 }
             }
 
-            Productos producto = new Productos(nombre, cantidad, valorUnitario, total, idCompra);
+            Productos producto = new Productos(nombre, cantidad, valorUnitario, porcDesc, total, idCompra);
             long idProdCreado = db.productosDao().createProducto(producto);
             producto.setId(idProdCreado);
             System.out.println("Producto "+ producto + " creado exitosamente.");
@@ -250,7 +252,7 @@ public class MainLogica {
 
     }
 
-    public boolean actualizarProducto(long idProd, String nombre, int cantidad, double valorUnitario, double total, int idCompra){
+    public boolean actualizarProducto(long idProd, String nombre, int cantidad, double valorUnitario, double porcDesc, double total, int idCompra){
         try {
 
             Productos prod = buscarProductoById(idProd);
@@ -258,6 +260,7 @@ public class MainLogica {
                 prod.setNombre(nombre);
                 prod.setCantidad(cantidad);
                 prod.setValorUnitario(valorUnitario);
+                prod.setPorcDesc(porcDesc);
                 prod.setTotal(total);
                 prod.setIdCompra(idCompra);
 

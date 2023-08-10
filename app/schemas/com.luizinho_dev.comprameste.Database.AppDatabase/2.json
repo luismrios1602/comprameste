@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "2a141454d9188f53a47bbea646bb3d66",
+    "identityHash": "5da0afb66af617e1b407fe24ee1961e0",
     "entities": [
       {
         "tableName": "Productos",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nombre` TEXT, `cantidad` INTEGER NOT NULL, `val_uni` REAL NOT NULL, `total` REAL NOT NULL, `id_compra` INTEGER NOT NULL, FOREIGN KEY(`id_compra`) REFERENCES `Compras`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nombre` TEXT, `cantidad` INTEGER NOT NULL, `val_uni` REAL NOT NULL, `porc_desc` REAL NOT NULL DEFAULT 0, `total` REAL NOT NULL, `id_compra` INTEGER NOT NULL, FOREIGN KEY(`id_compra`) REFERENCES `Compras`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)",
         "fields": [
           {
             "fieldPath": "id",
@@ -31,6 +31,13 @@
             "columnName": "val_uni",
             "affinity": "REAL",
             "notNull": true
+          },
+          {
+            "fieldPath": "porcDesc",
+            "columnName": "porc_desc",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
           },
           {
             "fieldPath": "total",
@@ -124,7 +131,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2a141454d9188f53a47bbea646bb3d66')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5da0afb66af617e1b407fe24ee1961e0')"
     ]
   }
 }

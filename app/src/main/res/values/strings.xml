@@ -3,8 +3,12 @@
 
     <string name="app_titulo">COMPRAMESTE</string>
     <string name="cabecera_producto">Producto</string>
-    <string name="cabecera_valor_unitario">Valor Unitario</string>
+    <string name="cabecera_valor_unitario">Valor Uni.</string>
+    <string name="title_valor_unitario">Valor Unitario</string>
     <string name="cabecera_cantidad">Cant</string>
+    <string name="title_cantidad">Cantidad</string>
+    <string name="cabecera_descuento">Desc</string>
+    <string name="title_descuento">% Descuento</string>
     <string name="simbolo_total">$</string>
     <string name="cabecera_total">Total</string>
     <string name="cabecera_id">Id</string>
@@ -17,6 +21,7 @@
     <string name="boton_cancelar">Cancelar</string>
     <string name="lb_cantidad_item">Cant:</string>
     <string name="lb_valUni_item">Valor Und:</string>
+    <string name="lb_porcDesc_item">% Desc:</string>
     <string name="lb_total_item">Total:</string>
     <string name="boton_nueva_compra">Nueva Compra</string>
     <string name="boton_eliminar">Eliminar</string>

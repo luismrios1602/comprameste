@@ -33,12 +33,16 @@ public class Productos {
     @ColumnInfo(name = "val_uni")
     public double valorUnitario;
 
+
     @ColumnInfo(name = "total")
     public double total;
 
     //No se coloca como foránea porque mucho texto
     @ColumnInfo(name = "id_compra")
     public int idCompra;
+
+    @ColumnInfo(name = "porc_desc", defaultValue = "0")
+    public double porcDesc;
 
     public Productos() {
     }
@@ -48,6 +52,16 @@ public class Productos {
         this.nombre = nombre;
         this.cantidad = cantidad;
         this.valorUnitario = valorUnitario;
+        this.total = total;
+        this.idCompra = idCompra;
+    }
+
+    @Ignore
+    public Productos(String nombre, int cantidad, double valorUnitario, double porcDesc, double total, int idCompra) {
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.valorUnitario = valorUnitario;
+        this.porcDesc = porcDesc;
         this.total = total;
         this.idCompra = idCompra;
     }
@@ -82,6 +96,14 @@ public class Productos {
 
     public void setValorUnitario(double valorUnitario) {
         this.valorUnitario = valorUnitario;
+    }
+
+    public double getPorcDesc() {
+        return porcDesc;
+    }
+
+    public void setPorcDesc(double porcDesc) {
+        this.porcDesc = porcDesc;
     }
 
     public double getTotal() {

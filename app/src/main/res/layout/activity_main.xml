@@ -419,13 +419,13 @@
                         android:id="@+id/txtNombreCompra"
                         style="@style/Widget.AppCompat.EditText"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="48dp"
                         android:autofillHints="true"
                         android:gravity="center_horizontal"
                         android:hint="@string/lb_nombre_compra"
                         android:inputType="textCapSentences"
                         android:textAlignment="center"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                     <Button
                         android:id="@+id/btnDuplicarCompra"
@@ -494,22 +494,34 @@
 
                     <TextView
                         android:id="@+id/lbCantidad"
-                        android:layout_width="53dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:padding="5dp"
+                        android:title="@string/title_cantidad"
                         android:text="@string/cabecera_cantidad" />
 
                     <TextView
                         android:id="@+id/lbValorUni"
-                        android:layout_width="165dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="2"
                         android:padding="5dp"
                         android:text="@string/cabecera_valor_unitario" />
 
                     <TextView
-                        android:id="@+id/lbTotal"
-                        android:layout_width="match_parent"
+                        android:id="@+id/lbDescuento"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:text="@string/cabecera_descuento" />
+
+                    <TextView
+                        android:id="@+id/lbTotal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
                         android:padding="5dp"
                         android:text="@string/cabecera_total"
                         app:autoSizeTextType="uniform" />
@@ -522,8 +534,9 @@
 
                     <EditText
                         android:id="@+id/txtCantidad"
-                        android:layout_width="53dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:autofillHints="yes"
                         android:ems="10"
                         android:hint="1"
@@ -531,23 +544,34 @@
 
                     <EditText
                         android:id="@+id/txtValorUnitario"
-                        android:layout_width="165dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="2"
                         android:autofillHints="true"
                         android:ems="10"
                         android:hint="0"
                         android:inputType="numberDecimal" />
 
+                    <EditText
+                        android:id="@+id/txtDescuento"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:autofillHints="yes"
+                        android:ems="10"
+                        android:hint="%"
+                        android:inputType="number"/>
+
                     <TextView
                         android:id="@+id/txtTotal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="2"
                         android:layout_margin="0sp"
                         android:layout_marginStart="2sp"
                         android:layout_marginLeft="2sp"
                         android:layout_marginEnd="2sp"
                         android:layout_marginRight="2sp"
-                        android:layout_weight="1"
                         android:enabled="false"
                         android:text="@string/total_final_inicial"
                         android:textColor="?attr/colorOnSecondary"

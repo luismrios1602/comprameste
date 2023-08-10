@@ -8,45 +8,18 @@
     android:visibility="visible">
 
     <TextView
-        android:id="@+id/txtCantProd"
-        android:layout_width="wrap_content"
+        android:id="@+id/txtNomProd"
+        android:layout_width="238dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginLeft="52dp"
         android:layout_marginTop="4dp"
-        android:text="@string/cabecera_cantidad"
+        android:text="@string/cabecera_producto"
         android:textColor="?attr/colorOnSecondary"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/lbCant"
-        app:layout_constraintTop_toBottomOf="@+id/txtNomProd" />
-
-
-    <TextView
-        android:id="@+id/txtTotalProd"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:gravity="start"
-        android:text="@string/cabecera_total"
-        android:textAlignment="textStart"
-        android:textColor="?attr/colorOnSecondary"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/lbValUni"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:text="@string/lb_valUni_item"
-        android:textColor="?attr/colorOnSecondary"
+        app:layout_constraintHorizontal_bias="0.093"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbCant" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/lbCant"
@@ -61,6 +34,32 @@
         app:layout_constraintTop_toBottomOf="@+id/txtNomProd" />
 
     <TextView
+        android:id="@+id/txtCantProd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="52dp"
+        android:layout_marginLeft="52dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/cabecera_cantidad"
+        android:textColor="?attr/colorOnSecondary"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/lbCant"
+        app:layout_constraintTop_toBottomOf="@+id/txtNomProd" />
+
+
+    <TextView
+        android:id="@+id/lbValUni"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/lb_valUni_item"
+        android:textColor="?attr/colorOnSecondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lbCant" />
+
+
+    <TextView
         android:id="@+id/txtValorProd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,17 +72,43 @@
         app:layout_constraintTop_toBottomOf="@+id/txtCantProd" />
 
     <TextView
-        android:id="@+id/txtNomProd"
-        android:layout_width="238dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/cabecera_producto"
+        android:id="@+id/lbPorcDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/lb_porcDesc_item"
         android:textColor="?attr/colorOnSecondary"
-        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lbValUni" />
+
+
+    <TextView
+        android:id="@+id/txtPorcDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginLeft="36dp"
+        android:text="@string/cabecera_descuento"
+        android:textColor="?attr/colorOnSecondary"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/lbPorcDesc"
+        app:layout_constraintTop_toBottomOf="@+id/txtValorProd" />
+
+    <TextView
+        android:id="@+id/txtTotalProd"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="start"
+        android:text="@string/cabecera_total"
+        android:textAlignment="textStart"
+        android:textColor="?attr/colorOnSecondary"
+        android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.093"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -97,6 +122,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtValorProd" />
+        app:layout_constraintTop_toBottomOf="@+id/txtPorcDesc" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

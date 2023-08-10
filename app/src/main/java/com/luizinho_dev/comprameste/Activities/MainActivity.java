@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     static EditText txtProducto;
     static EditText txtCantidad;
     static EditText txtValorUni;
+    static EditText txtDescuento;
     EditText txtNombreCompra;
     TextView txtTotalFinal;
     static TextView txtTotal;
@@ -116,12 +117,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Mostrar los items del menu en el appbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    //Método del los menu del app bar
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
@@ -158,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
         txtValorUni = findViewById(R.id.txtValorUnitario);
         txtValorUni.setText("");
         txtTotal = findViewById(R.id.txtTotal);
+        txtDescuento = findViewById(R.id.txtDescuento);
         txtTotalFinal = findViewById(R.id.txtTotalFinal);
         btnAgregar = findViewById(R.id.btnAgregar);
         btnCancelar = findViewById(R.id.btnCancelar);
@@ -233,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
                 String nombre;
                 int cantidad;
                 double valorUnitario;
+                double porcDesc;
                 double total;
                 int idCompra;
 
@@ -250,9 +255,10 @@ public class MainActivity extends AppCompatActivity {
                         nombre = mainLogica.listaProductos.get(i).getNombre();
                         cantidad = mainLogica.listaProductos.get(i).getCantidad();
                         valorUnitario = mainLogica.listaProductos.get(i).getValorUnitario();
+                        porcDesc = mainLogica.listaProductos.get(i).getPorcDesc();
                         total = mainLogica.listaProductos.get(i).getTotal();
 
-                        mainLogica.crearProducto(nombre,cantidad, valorUnitario, total, idCompra);
+                        mainLogica.crearProducto(nombre,cantidad, valorUnitario, porcDesc, total, idCompra);
                     }
 
                     mainLogica.cargarProductosByCompra(idCompra);
@@ -337,6 +343,35 @@ public class MainActivity extends AppCompatActivity {
         });
         //endregion
 
+        //region EditText txtDescuento
+        txtDescuento.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Este método se llama antes de que el texto cambie.
+            }
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Este método se llama cuando el texto cambia.
+                // Validamos que los valores no estén nulos
+                if(validarValores()){
+                    int cant = Integer.parseInt(txtCantidad.getText().toString());
+                    Double valUni = Double.parseDouble(txtValorUni.getText().toString());
+
+                    //No mandamos el porcentaje de descuento porque al calcular el total es que lo usamos segun si está vacio o no
+                    txtTotal.setText(calcularTotalUnd(cant,valUni).toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // Este método se llama después de que el texto cambie.
+            }
+        });
+        //endregion
+
+
 
     }
 
@@ -358,8 +393,14 @@ public class MainActivity extends AppCompatActivity {
             String valUniString = txtValorUni.getText().toString();
             if (valUniString.equals("")) txtValorUni.setText("0");
 
+            //Validamos si el valor del descuento está vacío y lo seteamos por defecto a 0 (Para evitar escribirla)
+            String porcDescString = txtDescuento.getText().toString();
+            if (porcDescString.equals("")) txtDescuento.setText("0");
+
             int cant = Integer.parseInt(txtCantidad.getText().toString());
             double valUni = Double.parseDouble(txtValorUni.getText().toString());
+            //No validamos el descuento porque es opcional pero igual lo setteamos a 0
+            double porcDesc = Double.parseDouble(txtDescuento.getText().toString());
 
             return !nombre.isEmpty() && cant >= 0 && valUni >= 0; //Si no cumple con las validaciones, directamente retornamos false y si sí, pues true :v
 
@@ -387,7 +428,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public Double calcularTotalUnd(int cant, Double valorUni){
-        return cant * valorUni;
+        //Para validar el porcentaje revisamos si es un vacío. Si es vacio lo ponemos a valer verga. digo, 0.
+        Double porc = (txtDescuento.getText().toString().isEmpty()) ? 0 : Double.parseDouble(txtDescuento.getText().toString());
+        Double valSinDes = cant * valorUni;
+
+        return valSinDes - (valSinDes * (porc/100));
     }
 
     public void limpiarCampos(){
@@ -396,6 +441,7 @@ public class MainActivity extends AppCompatActivity {
         txtProducto.setText("");
         txtCantidad.setText("");
         txtValorUni.setText("");
+        txtDescuento.setText("");
         txtTotal.setText("0");
     }
 
@@ -421,6 +467,7 @@ public class MainActivity extends AppCompatActivity {
         Productos prodCreado = mainLogica.crearProducto(txtProducto.getText().toString(),
                 Integer.parseInt(txtCantidad.getText().toString()),
                 Double.parseDouble(txtValorUni.getText().toString()),
+                Double.parseDouble(txtDescuento.getText().toString()),
                 Double.parseDouble(txtTotal.getText().toString()),
                 mainLogica.compraActu.getId());
 
@@ -440,9 +487,10 @@ public class MainActivity extends AppCompatActivity {
         String nombre = txtProducto.getText().toString();
         int cantidad = Integer.parseInt(txtCantidad.getText().toString());
         double valorUnitario = Double.parseDouble(txtValorUni.getText().toString());
+        double porcDesc = Double.parseDouble(txtDescuento.getText().toString());
         double total = Double.parseDouble(txtTotal.getText().toString());
 
-        boolean prodActualizado = mainLogica.actualizarProducto(idProd, nombre, cantidad, valorUnitario, total, mainLogica.compraActu.getId());
+        boolean prodActualizado = mainLogica.actualizarProducto(idProd, nombre, cantidad, valorUnitario, porcDesc, total, mainLogica.compraActu.getId());
 
         if (prodActualizado){
             //Si se actualizó correctamente tenemos que actualizar el adapter
@@ -489,6 +537,7 @@ public class MainActivity extends AppCompatActivity {
         txtProducto.setText(prodEdit.getNombre());
         txtCantidad.setText(String.valueOf(prodEdit.getCantidad()));
         txtValorUni.setText(String.valueOf(prodEdit.getValorUnitario()));
+        txtDescuento.setText(String.valueOf(prodEdit.getPorcDesc()));
         txtTotal.setText(String.valueOf(prodEdit.getTotal()));
         txtProducto.requestFocusFromTouch();
         //Le notificamos al adapter que tuvo un cambio (En realidad es para que me vuelva a mostrar el elemento porque lo borra :v)
